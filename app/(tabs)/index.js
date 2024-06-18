@@ -5,6 +5,9 @@ import {
   useWindowDimensions,
   Button,
   Pressable,
+  FlatList,
+  Text,
+  Async,
 } from "react-native";
 import React, { useEffect } from "react";
 import RenderHTML from "react-native-render-html";
@@ -14,6 +17,35 @@ export default function Page() {
   const [quoteForToday, setQuoteForToday] = React.useState("");
   const api_url = "https://zenquotes.io/api/today";
   const { width } = useWindowDimensions();
+
+  const data = [
+    {
+      id: "1",
+      title: "Entry 1",
+    },
+    {
+      id: "2",
+      title: "Entry 2",
+    },
+    {
+      id: "3",
+      title: "Entry 3",
+    },
+  ];
+
+  const Item = ({ title }) => (
+    <View
+      style={{
+        height: 100,
+        margin: 20,
+        borderWidth: 1,
+        padding: 10,
+        backgroundColor: "pink",
+      }}
+    >
+      <Text style={{}}>{title}</Text>
+    </View>
+  );
 
   useEffect(() => {
     async function getQuoteToday(url) {
@@ -27,11 +59,18 @@ export default function Page() {
 
   return (
     <View>
-      <View style={{ alignItems: "center" }}>
+      <View
+        style={{
+          fontFamily: "Gill Sans, sans-serif",
+        }}
+      >
         <RenderHTML
           contentWidth={width}
           source={quoteForToday}
-          style={{ justifyContent: "center" }}
+          baseStyle={{
+            textAlign: "center",
+            fontSize: 20,
+          }}
         />
         <View style={{ width: 80, alignSelf: "flex-end", marginRight: 20 }}>
           <Button title="Copy" color="pink" />
@@ -48,19 +87,23 @@ export default function Page() {
           backgroundColor: "pink",
         }}
       />
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <Item title={item.title} />}
+        keyExtractor={(item) => item.id}
+      />
+
       <View
         style={{
           backgroundColor: "pink",
-          padding: 20,
           borderRadius: 50,
           width: 60,
           height: 60,
           alignItems: "center",
           justifyContent: "center",
           position: "absolute",
-          alignSelf: "flex-end",
-          marginRight: 20,
-          transform: "translate(-18px,650px)",
+          transform: "translate(310px,650px)",
+          zIndex: 99999,
         }}
       >
         <Pressable>
