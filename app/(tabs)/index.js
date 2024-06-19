@@ -1,68 +1,112 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
   View,
-  TextInput,
   useWindowDimensions,
   Button,
   Pressable,
   FlatList,
   Text,
-  Async,
 } from "react-native";
 import React, { useEffect } from "react";
 import RenderHTML from "react-native-render-html";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 
 export default function Page() {
-  const [entryText, onChangeText] = React.useState("");
   const [quoteForToday, setQuoteForToday] = React.useState("");
+  const [entryData, setEntryData] = React.useState([]);
+
   const api_url = "https://zenquotes.io/api/today";
   const { width } = useWindowDimensions();
+  const router = useRouter();
 
-  const data = [
-    {
-      id: "1",
-      title: "Entry 1",
-    },
-    {
-      id: "2",
-      title: "Entry 2",
-    },
-    {
-      id: "3",
-      title: "Entry 3",
-    },
-  ];
-
-  const Item = ({ title }) => (
+  const Item = ({ id, title }) => (
     <View
       style={{
-        height: 100,
         margin: 20,
-        borderWidth: 1,
-        padding: 10,
-        backgroundColor: "pink",
       }}
     >
-      <Text style={{}}>{title}</Text>
+      <Pressable
+        onPress={() => {
+          console.log("clicked: " + id);
+          router.push({ pathname: "[input]", params: { id } });
+        }}
+      >
+        <Text
+          style={{
+            height: 100,
+            borderWidth: 1,
+            padding: 10,
+            backgroundColor: "pink",
+          }}
+        >
+          {title}
+        </Text>
+      </Pressable>
     </View>
   );
 
+  clearAll = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch (e) {
+      // clear error
+    }
+
+    console.log("Done. ");
+  };
+
   useEffect(() => {
+    // clearAll();
     async function getQuoteToday(url) {
       const response = await fetch(url);
       var data = await response.json();
       console.log(data[0].q);
       setQuoteForToday({ html: data[0].h });
     }
+
+    const importData = async () => {
+      try {
+        const keys = await AsyncStorage.getAllKeys();
+        const entries = await AsyncStorage.multiGet(keys);
+        const objectEntries = entries.map(([key, value]) => ({
+          id: key,
+          entry: value,
+        }));
+
+        setEntryData(objectEntries);
+
+        console.log("Entries: ");
+        objectEntries.forEach((entry) => {
+          console.log(entry);
+        });
+      } catch (error) {
+        console.error("Error importing data: ", error);
+      }
+    };
+
+    importData();
+
     getQuoteToday(api_url);
   }, []);
+
+  // const getData = async () => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem("my-key");
+  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
 
   return (
     <View>
       <View
-        style={{
-          fontFamily: "Gill Sans, sans-serif",
-        }}
+        style={
+          {
+            // fontFamily: "Gill Sans, sans-serif",
+          }
+        }
       >
         <RenderHTML
           contentWidth={width}
@@ -76,22 +120,12 @@ export default function Page() {
           <Button title="Copy" color="pink" />
         </View>
       </View>
-      <TextInput
-        onChangeText={onChangeText}
-        value={entryText}
-        style={{
-          height: 100,
-          margin: 20,
-          borderWidth: 1,
-          padding: 10,
-          backgroundColor: "pink",
-        }}
-      />
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <Item title={item.title} />}
-        keyExtractor={(item) => item.id}
-      />
+
+      <>
+        {entryData.map((item) => (
+          <Item key={item.id} id={item.id} title={item.entry} />
+        ))}
+      </>
 
       <View
         style={{
@@ -102,11 +136,11 @@ export default function Page() {
           alignItems: "center",
           justifyContent: "center",
           position: "absolute",
-          transform: "translate(310px,650px)",
+          transform: [{ translateX: 310 }, { translateY: 650 }],
           zIndex: 99999,
         }}
       >
-        <Pressable>
+        <Pressable onPress={() => router.push({ pathname: "[input]" })}>
           <FontAwesome size={20} name="plus" color="white" />
         </Pressable>
       </View>
