@@ -32,6 +32,7 @@ export default function InputScreen() {
   const getData = async (key) => {
     try {
       const jsonValue = await AsyncStorage.getItem(key);
+      console.log("data: ", jsonValue);
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
@@ -44,6 +45,7 @@ export default function InputScreen() {
       const entryObject = getData(id);
       console.log("object: " + { entryObject });
       setText(entryObject.entry);
+    } else {
     }
   }, []);
 

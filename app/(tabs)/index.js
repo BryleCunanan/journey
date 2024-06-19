@@ -56,6 +56,26 @@ export default function Page() {
     console.log("Done. ");
   };
 
+  const importData = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const entries = await AsyncStorage.multiGet(keys);
+      const objectEntries = entries.map(([key, value]) => ({
+        id: key,
+        entry: value,
+      }));
+
+      setEntryData(objectEntries);
+
+      console.log("Entries: ");
+      objectEntries.forEach((entry) => {
+        console.log(entry);
+      });
+    } catch (error) {
+      console.error("Error importing data: ", error);
+    }
+  };
+
   useEffect(() => {
     // clearAll();
     async function getQuoteToday(url) {
@@ -65,29 +85,19 @@ export default function Page() {
       setQuoteForToday({ html: data[0].h });
     }
 
-    const importData = async () => {
-      try {
-        const keys = await AsyncStorage.getAllKeys();
-        const entries = await AsyncStorage.multiGet(keys);
-        const objectEntries = entries.map(([key, value]) => ({
-          id: key,
-          entry: value,
-        }));
-
-        setEntryData(objectEntries);
-
-        console.log("Entries: ");
-        objectEntries.forEach((entry) => {
-          console.log(entry);
-        });
-      } catch (error) {
-        console.error("Error importing data: ", error);
-      }
-    };
-
     importData();
 
     getQuoteToday(api_url);
+  }, []);
+
+  useEffect(() => {
+    const refreshInterval = setInterval(() => {
+      importData();
+    }, 1000);
+
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, []);
 
   // const getData = async () => {
