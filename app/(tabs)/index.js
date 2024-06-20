@@ -6,6 +6,9 @@ import {
   Pressable,
   FlatList,
   Text,
+  RefreshControl,
+  TouchableHighlight,
+  Clipboard,
 } from "react-native";
 import React, { useEffect } from "react";
 import RenderHTML from "react-native-render-html";
@@ -16,35 +19,60 @@ export default function Page() {
   const [quoteForToday, setQuoteForToday] = React.useState("");
   const [entryData, setEntryData] = React.useState([]);
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
   const api_url = "https://zenquotes.io/api/today";
   const { width } = useWindowDimensions();
   const router = useRouter();
 
-  const Item = ({ id, title }) => (
-    <View
-      style={{
-        margin: 20,
-      }}
-    >
-      <Pressable
+  const Item = ({ id, title, index, separators }) => (
+    <View style={{}}>
+      <TouchableHighlight
+        key={id}
         onPress={() => {
-          console.log("clicked: " + id);
           router.push({ pathname: "[input]", params: { id } });
         }}
+        onShowUnderlay={separators.highlight}
+        onHideUnderlay={separators.unhighlight}
+        style={{ height: 100, backgroundColor: "pink", padding: 10 }}
       >
-        <Text
-          style={{
-            height: 100,
-            borderWidth: 1,
-            padding: 10,
-            backgroundColor: "pink",
+        <View>
+          <Text>{title}</Text>
+        </View>
+      </TouchableHighlight>
+      <View
+        style={{
+          position: "absolute",
+          backgroundColor: "black",
+          borderRadius: 50,
+          width: 30,
+          height: 30,
+          padding: 5,
+          alignItems: "center",
+          right: 10,
+          bottom: 10,
+        }}
+      >
+        <Pressable
+          onPress={() => {
+            removeValue(id);
           }}
         >
-          {title}
-        </Text>
-      </Pressable>
+          <FontAwesome size={20} name="trash" color="white" />
+        </Pressable>
+      </View>
     </View>
   );
+
+  removeValue = async (key) => {
+    try {
+      await AsyncStorage.removeItem(key);
+    } catch (e) {
+      // remove error
+    }
+
+    console.log("Done.");
+  };
 
   clearAll = async () => {
     try {
@@ -65,7 +93,7 @@ export default function Page() {
         entry: value,
       }));
 
-      setEntryData(objectEntries);
+      setEntryData(objectEntries.reverse());
 
       console.log("Entries: ");
       objectEntries.forEach((entry) => {
@@ -74,6 +102,8 @@ export default function Page() {
     } catch (error) {
       console.error("Error importing data: ", error);
     }
+
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -82,7 +112,7 @@ export default function Page() {
       const response = await fetch(url);
       var data = await response.json();
       console.log(data[0].q);
-      setQuoteForToday({ html: data[0].h });
+      setQuoteForToday({ html: data[0].h, copy: data[0].q });
     }
 
     importData();
@@ -90,28 +120,42 @@ export default function Page() {
     getQuoteToday(api_url);
   }, []);
 
-  useEffect(() => {
-    const refreshInterval = setInterval(() => {
-      importData();
-    }, 1000);
+  // useEffect(() => {
+  //   const refreshInterval = setInterval(() => {
+  //     importData();
+  //   }, 1000);
 
-    return () => {
-      clearInterval(refreshInterval);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(refreshInterval);
+  //   };
+  // }, []);
 
-  // const getData = async () => {
-  //   try {
-  //     const jsonValue = await AsyncStorage.getItem("my-key");
-  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
-  //   } catch (e) {
-  //     // error reading value
-  //   }
-  // };
+  const renderHeader = () => (
+    <View style={{ marginBottom: 20 }}>
+      <RenderHTML
+        contentWidth={width}
+        source={quoteForToday}
+        baseStyle={{
+          textAlign: "center",
+          fontSize: 20,
+        }}
+      />
+      <View style={{ width: 80, alignSelf: "flex-end", marginRight: 20 }}>
+        <Button
+          title="Copy"
+          color="pink"
+          onPress={() => {
+            Clipboard.setString(quoteForToday.copy);
+          }}
+        />
+      </View>
+    </View>
+  );
 
   return (
-    <View>
-      <View
+    <>
+      <View>
+        {/* <View
         style={
           {
             // fontFamily: "Gill Sans, sans-serif",
@@ -129,14 +173,36 @@ export default function Page() {
         <View style={{ width: 80, alignSelf: "flex-end", marginRight: 20 }}>
           <Button title="Copy" color="pink" />
         </View>
+      </View> */}
+
+        <FlatList
+          ListHeaderComponent={renderHeader}
+          ItemSeparatorComponent={({ highlighted }) => (
+            <View style={{ height: 20 }} />
+          )}
+          data={entryData}
+          renderItem={({ item, index, separators }) => (
+            <Item
+              title={item.entry}
+              id={item.id}
+              index={index}
+              separators={separators}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                importData();
+              }}
+              colors={["#9Bd35A", "#689F38"]}
+              progressViewOffset={10}
+            />
+          }
+        />
       </View>
-
-      <>
-        {entryData.map((item) => (
-          <Item key={item.id} id={item.id} title={item.entry} />
-        ))}
-      </>
-
       <View
         style={{
           backgroundColor: "pink",
@@ -146,7 +212,8 @@ export default function Page() {
           alignItems: "center",
           justifyContent: "center",
           position: "absolute",
-          transform: [{ translateX: 310 }, { translateY: 650 }],
+          right: 20,
+          bottom: 20,
           zIndex: 99999,
         }}
       >
@@ -154,6 +221,6 @@ export default function Page() {
           <FontAwesome size={20} name="plus" color="white" />
         </Pressable>
       </View>
-    </View>
+    </>
   );
 }

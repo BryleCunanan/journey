@@ -32,8 +32,12 @@ export default function InputScreen() {
   const getData = async (key) => {
     try {
       const jsonValue = await AsyncStorage.getItem(key);
+
       console.log("data: ", jsonValue);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+      jsonValue != null ? JSON.parse(jsonValue) : null;
+      const filtered = jsonValue.replace(/"/g, "");
+      console.log("data: ", filtered);
+      setText(filtered);
     } catch (e) {
       // error reading value
     }
@@ -42,9 +46,7 @@ export default function InputScreen() {
   useEffect(() => {
     console.log("id: " + id);
     if (id) {
-      const entryObject = getData(id);
-      console.log("object: " + { entryObject });
-      setText(entryObject.entry);
+      getData(id);
     } else {
     }
   }, []);
