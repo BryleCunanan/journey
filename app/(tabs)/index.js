@@ -1,4 +1,4 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   useWindowDimensions,
@@ -9,172 +9,228 @@ import {
   RefreshControl,
   TouchableHighlight,
   Clipboard,
+  Animated,
+  ActivityIndicator,
 } from "react-native";
-import React, { useEffect } from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RenderHTML from "react-native-render-html";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 
 export default function Page() {
-  const [quoteForToday, setQuoteForToday] = React.useState("");
-  const [entryData, setEntryData] = React.useState([]);
-
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [quoteForToday, setQuoteForToday] = useState(null);
+  const [entryData, setEntryData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const api_url = "https://zenquotes.io/api/today";
   const { width } = useWindowDimensions();
   const router = useRouter();
+  const plusButtonScale1 = useState(new Animated.Value(1))[0];
+  const plusButtonScale2 = useState(new Animated.Value(1))[0];
 
-  const Item = ({ id, title, index, separators }) => (
-    <View style={{}}>
-      <TouchableHighlight
-        key={id}
-        onPress={() => {
-          router.push({ pathname: "[input]", params: { id } });
-        }}
-        onShowUnderlay={separators.highlight}
-        onHideUnderlay={separators.unhighlight}
-        style={{ height: 100, backgroundColor: "pink", padding: 10 }}
-      >
-        <View>
-          <Text>{title}</Text>
-        </View>
-      </TouchableHighlight>
-      <View
-        style={{
-          position: "absolute",
-          backgroundColor: "black",
-          borderRadius: 50,
-          width: 30,
-          height: 30,
-          padding: 5,
-          alignItems: "center",
-          right: 10,
-          bottom: 10,
-        }}
-      >
-        <Pressable
-          onPress={() => {
-            removeValue(id);
-          }}
-        >
-          <FontAwesome size={20} name="trash" color="white" />
-        </Pressable>
-      </View>
-    </View>
-  );
-
-  removeValue = async (key) => {
-    try {
-      await AsyncStorage.removeItem(key);
-    } catch (e) {
-      // remove error
-    }
-
-    console.log("Done.");
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return function (...args) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
   };
 
-  clearAll = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (e) {
-      // clear error
-    }
+  const debouncedFetchQuoteOfTheDay = useCallback(
+    debounce(() => {
+      fetchQuoteOfTheDay(api_url);
+    }, 1000), // Adjust debounce time as needed
+    []
+  );
 
-    console.log("Done. ");
+  useEffect(() => {
+    debouncedFetchQuoteOfTheDay();
+    return debouncedFetchQuoteOfTheDay.cancel;
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      importData();
+    }, [])
+  );
+
+  const fetchQuoteOfTheDay = async (url) => {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setQuoteForToday({ html: data[0].h, copy: data[0].q });
+      storeData("config_html", data[0].h);
+      storeData("config_copy", data[0].q);
+      const html = getData("config_html");
+      const copy = getData("config_copy");
+      console.log("HTML: ", html);
+    } catch (error) {
+      console.error("Error fetching quote of the day: ", error);
+      const html = getData("config_html");
+      const copy = getData("config_copy");
+
+      setQuoteForToday({ html: html, copy: copy });
+    }
   };
 
   const importData = async () => {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      const entries = await AsyncStorage.multiGet(keys);
+      const filteredKeys = keys.filter((key) => !key.startsWith("config_"));
+      const entries = await AsyncStorage.multiGet(filteredKeys);
       const objectEntries = entries.map(([key, value]) => ({
         id: key,
         entry: value,
+        scale: new Animated.Value(1), // Add scale animation value for each item
       }));
-
       setEntryData(objectEntries.reverse());
-
-      console.log("Entries: ");
-      objectEntries.forEach((entry) => {
-        console.log(entry);
-      });
     } catch (error) {
       console.error("Error importing data: ", error);
     }
-
     setRefreshing(false);
   };
 
-  useEffect(() => {
-    // clearAll();
-    async function getQuoteToday(url) {
-      const response = await fetch(url);
-      var data = await response.json();
-      console.log(data[0].q);
-      setQuoteForToday({ html: data[0].h, copy: data[0].q });
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (e) {
+      // saving error
     }
+  };
 
-    importData();
+  const getData = async (key) => {
+    try {
+      return await AsyncStorage.getItem(key);
+    } catch (e) {
+      // error reading value
+    }
+  };
 
-    getQuoteToday(api_url);
-  }, []);
+  const removeValue = async (key) => {
+    try {
+      await AsyncStorage.removeItem(key);
+      importData();
+    } catch (e) {
+      console.error("Error removing data:", e);
+    }
+  };
 
-  // useEffect(() => {
-  //   const refreshInterval = setInterval(() => {
-  //     importData();
-  //   }, 1000);
+  const handlePressIn = (scale) => {
+    Animated.spring(scale, {
+      toValue: 0.8,
+      useNativeDriver: true,
+    }).start();
+  };
 
-  //   return () => {
-  //     clearInterval(refreshInterval);
-  //   };
-  // }, []);
+  const handlePressOut = (scale) => {
+    Animated.spring(scale, {
+      toValue: 1,
+      friction: 5,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const Item = ({ id, title, scale, separators }) => {
+    const date = new Date(id * 1000);
+
+    const formattedDate = date.toLocaleDateString(undefined, {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const formattedTime = date.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const formattedTitle = title.replace(/"/g, "");
+
+    return (
+      <View>
+        <TouchableHighlight
+          onPress={() => router.push({ pathname: "[input]", params: { id } })}
+          onShowUnderlay={separators.highlight}
+          onHideUnderlay={separators.unhighlight}
+          style={{ backgroundColor: "pink", padding: 10 }}
+        >
+          <>
+            <View>
+              <Text style={{ height: 100 }}>{formattedTitle}</Text>
+              <Text style={{ textAlignVertical: "bottom" }}>
+                {`${formattedDate}, ${formattedTime}`}
+              </Text>
+            </View>
+          </>
+        </TouchableHighlight>
+        <View>
+          <Pressable
+            onPress={() => removeValue(id)}
+            onPressIn={() => handlePressIn(scale)}
+            onPressOut={() => handlePressOut(scale)}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+            style={({ pressed }) => [
+              {
+                position: "absolute",
+                borderRadius: 50,
+                width: 30,
+                height: 30,
+                alignItems: "center",
+                justifyContent: "center",
+                right: 5,
+                bottom: 5,
+                backgroundColor: pressed ? "rgba(0, 0, 0, 0.4)" : "transparent",
+              },
+            ]}
+          >
+            <Animated.View style={{ transform: [{ scale }] }}>
+              <FontAwesome size={20} name="trash" color="white" />
+            </Animated.View>
+          </Pressable>
+        </View>
+      </View>
+    );
+  };
 
   const renderHeader = () => (
     <View style={{ marginBottom: 20 }}>
-      <RenderHTML
-        contentWidth={width}
-        source={quoteForToday}
-        baseStyle={{
-          textAlign: "center",
-          fontSize: 20,
-        }}
-      />
-      <View style={{ width: 80, alignSelf: "flex-end", marginRight: 20 }}>
-        <Button
-          title="Copy"
+      {quoteForToday ? (
+        <>
+          <RenderHTML
+            contentWidth={width}
+            source={quoteForToday}
+            baseStyle={{
+              textAlign: "center",
+              fontSize: 20,
+              fontStyle: "italic",
+            }}
+          />
+          <View style={{ width: 80, alignSelf: "flex-end", marginRight: 20 }}>
+            <Button
+              title="Copy"
+              color="pink"
+              onPress={() => Clipboard.setString(quoteForToday.copy)}
+            />
+          </View>
+        </>
+      ) : (
+        <ActivityIndicator
+          style={{ marginTop: 20 }}
+          size="large"
           color="pink"
-          onPress={() => {
-            Clipboard.setString(quoteForToday.copy);
-          }}
         />
-      </View>
+      )}
     </View>
   );
 
   return (
     <>
       <View>
-        {/* <View
-        style={
-          {
-            // fontFamily: "Gill Sans, sans-serif",
-          }
-        }
-      >
-        <RenderHTML
-          contentWidth={width}
-          source={quoteForToday}
-          baseStyle={{
-            textAlign: "center",
-            fontSize: 20,
-          }}
-        />
-        <View style={{ width: 80, alignSelf: "flex-end", marginRight: 20 }}>
-          <Button title="Copy" color="pink" />
-        </View>
-      </View> */}
-
         <FlatList
           ListHeaderComponent={renderHeader}
           ItemSeparatorComponent={({ highlighted }) => (
@@ -185,6 +241,7 @@ export default function Page() {
             <Item
               title={item.entry}
               id={item.id}
+              scale={item.scale}
               index={index}
               separators={separators}
             />
@@ -202,23 +259,47 @@ export default function Page() {
             />
           }
         />
+        <Pressable
+          onPress={() => router.push({ pathname: "[input]" })}
+          onPressIn={() => handlePressIn(plusButtonScale1)}
+          onPressOut={() => handlePressOut(plusButtonScale1)}
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+          style={{
+            borderRadius: 50,
+            alignItems: "center",
+            justifyContent: "center",
+            alignSelf: "center",
+            marginTop: 20,
+          }}
+        >
+          <Animated.View style={{ transform: [{ scale: plusButtonScale1 }] }}>
+            <FontAwesome size={40} name="plus" color="pink" />
+          </Animated.View>
+        </Pressable>
       </View>
       <View
         style={{
-          backgroundColor: "pink",
+          backgroundColor: "black",
           borderRadius: 50,
           width: 60,
           height: 60,
           alignItems: "center",
           justifyContent: "center",
           position: "absolute",
-          right: 20,
           bottom: 20,
+          right: 20,
           zIndex: 99999,
         }}
       >
-        <Pressable onPress={() => router.push({ pathname: "[input]" })}>
-          <FontAwesome size={20} name="plus" color="white" />
+        <Pressable
+          onPress={() => router.push({ pathname: "[input]" })}
+          onPressIn={() => handlePressIn(plusButtonScale2)}
+          onPressOut={() => handlePressOut(plusButtonScale2)}
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+        >
+          <Animated.View style={{ transform: [{ scale: plusButtonScale2 }] }}>
+            <FontAwesome size={20} name="plus" color="white" />
+          </Animated.View>
         </Pressable>
       </View>
     </>
