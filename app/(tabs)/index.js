@@ -43,7 +43,7 @@ export default function Page() {
   const debouncedFetchQuoteOfTheDay = useCallback(
     debounce(() => {
       fetchQuoteOfTheDay(api_url);
-    }, 1000), // Adjust debounce time as needed
+    }, 1000), 
     []
   );
 
@@ -63,15 +63,15 @@ export default function Page() {
       const response = await fetch(url);
       const data = await response.json();
       setQuoteForToday({ html: data[0].h, copy: data[0].q });
-      storeData("config_html", data[0].h);
-      storeData("config_copy", data[0].q);
-      const html = getData("config_html");
-      const copy = getData("config_copy");
-      console.log("HTML: ", html);
+      await storeData("config_html", data[0].h);
+      await storeData("config_copy", data[0].q);
     } catch (error) {
       console.error("Error fetching quote of the day: ", error);
-      const html = getData("config_html");
-      const copy = getData("config_copy");
+      const html = await getData("config_html");
+      const copy = await getData("config_copy");
+      
+      console.log("HTML:", html);
+      console.log("Copy:", copy);
 
       setQuoteForToday({ html: html, copy: copy });
     }
@@ -96,7 +96,8 @@ export default function Page() {
 
   const storeData = async (key, value) => {
     try {
-      await AsyncStorage.setItem(key, value);
+      const jsonValue = JSON.stringify(value);
+    await AsyncStorage.setItem(key, jsonValue);
     } catch (e) {
       // saving error
     }
@@ -104,7 +105,9 @@ export default function Page() {
 
   const getData = async (key) => {
     try {
-      return await AsyncStorage.getItem(key);
+      const jsonValue = await AsyncStorage.getItem(key);
+
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
     }

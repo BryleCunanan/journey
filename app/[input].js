@@ -18,13 +18,14 @@ export default function InputScreen() {
   const { id } = useLocalSearchParams();
 
   const handleSave = () => {
+    if(text !== ""){
     if (id) {
       storeData(id, text);
     } else {
       const time_id = Math.floor(Date.now() / 1000).toString();
       storeData(time_id, text);
     }
-    router.back();
+    router.back();}
   };
 
   const storeData = async (key, value) => {
@@ -56,7 +57,6 @@ export default function InputScreen() {
     } else {
     }
   }, []);
-
   return (
     <>
       <View style={styles.container}>
