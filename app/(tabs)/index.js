@@ -17,6 +17,8 @@ import RenderHTML from "react-native-render-html";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
 
+import * as MediaLibrary from "expo-media-library";
+
 export default function Page() {
   const [quoteForToday, setQuoteForToday] = useState(null);
   const [entryData, setEntryData] = useState([]);
@@ -43,11 +45,21 @@ export default function Page() {
   const debouncedFetchQuoteOfTheDay = useCallback(
     debounce(() => {
       fetchQuoteOfTheDay(api_url);
-    }, 1000), 
+    }, 1000),
     []
   );
+  const getPermissions = async () => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+
+    console.log("Status: ", status);
+    if (status !== "granted") {
+      alert("Sorry, we need media library permissions to make this work!");
+    }
+  };
 
   useEffect(() => {
+    // clearAll();
+    getPermissions();
     debouncedFetchQuoteOfTheDay();
     return debouncedFetchQuoteOfTheDay.cancel;
   }, []);
@@ -69,7 +81,7 @@ export default function Page() {
       console.error("Error fetching quote of the day: ", error);
       const html = await getData("config_html");
       const copy = await getData("config_copy");
-      
+
       console.log("HTML:", html);
       console.log("Copy:", copy);
 
@@ -82,11 +94,19 @@ export default function Page() {
       const keys = await AsyncStorage.getAllKeys();
       const filteredKeys = keys.filter((key) => !key.startsWith("config_"));
       const entries = await AsyncStorage.multiGet(filteredKeys);
-      const objectEntries = entries.map(([key, value]) => ({
-        id: key,
-        entry: value,
-        scale: new Animated.Value(1), // Add scale animation value for each item
-      }));
+      const objectEntries = entries.map((item) => {
+        const id = item[0];
+        const entryData = JSON.parse(item[1]);
+
+        return {
+          id: id,
+          entry: {
+            entry: entryData.entry,
+            media: entryData.media,
+          },
+          scale: 1,
+        };
+      });
       setEntryData(objectEntries.reverse());
     } catch (error) {
       console.error("Error importing data: ", error);
@@ -97,7 +117,7 @@ export default function Page() {
   const storeData = async (key, value) => {
     try {
       const jsonValue = JSON.stringify(value);
-    await AsyncStorage.setItem(key, jsonValue);
+      await AsyncStorage.setItem(key, jsonValue);
     } catch (e) {
       // saving error
     }
@@ -138,6 +158,16 @@ export default function Page() {
     }).start();
   };
 
+  clearAll = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch (e) {
+      // clear error
+    }
+
+    console.log("Done.");
+  };
+
   const Item = ({ id, title, scale, separators }) => {
     const date = new Date(id * 1000);
 
@@ -152,8 +182,6 @@ export default function Page() {
       minute: "2-digit",
     });
 
-    const formattedTitle = title.replace(/"/g, "");
-
     return (
       <View>
         <TouchableHighlight
@@ -164,7 +192,7 @@ export default function Page() {
         >
           <>
             <View>
-              <Text style={{ height: 100 }}>{formattedTitle}</Text>
+              <Text style={{ height: 100 }}>{title}</Text>
               <Text style={{ textAlignVertical: "bottom" }}>
                 {`${formattedDate}, ${formattedTime}`}
               </Text>
@@ -242,7 +270,7 @@ export default function Page() {
           data={entryData}
           renderItem={({ item, index, separators }) => (
             <Item
-              title={item.entry}
+              title={item.entry.entry}
               id={item.id}
               scale={item.scale}
               index={index}
