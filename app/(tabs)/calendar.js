@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,9 +6,9 @@ import {
   TouchableHighlight,
   Pressable,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
-
 import { useRouter, useFocusEffect } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,7 +23,10 @@ export default function Page() {
   const [selected, setSelected] = useState(formattedDate);
   const [epochId, setEpochId] = useState(currentDate.getTime());
   const [entryToday, setEntryToday] = useState([]);
+  const [markedDates, setMarkedDates] = useState({});
+  const [loading, setLoading] = useState(true);
   const plusButtonScale1 = useState(new Animated.Value(1))[0];
+  const plusButtonScale2 = useState(new Animated.Value(1))[0];
   const router = useRouter();
 
   useFocusEffect(
@@ -35,9 +38,51 @@ export default function Page() {
         timestamp: epochId,
         year: year,
       };
+
+      updateMarkers();
       handleDayPress(initDate);
     }, [])
   );
+
+  useEffect(() => {
+    const initDate = {
+      dateString: formattedDate,
+      day: day,
+      month: month,
+      timestamp: epochId,
+      year: year,
+    };
+
+    updateMarkers();
+    handleDayPress(initDate);
+  }, []);
+
+  const updateMarkers = async () => {
+    try {
+      const data = await importData();
+
+      const transformedData = data.reduce((object, item) => {
+        const tempDate = new Date(parseInt(item.id, 10) * 1000);
+        tempDate.setHours(0, 0, 0, 0);
+
+        const year = tempDate.getFullYear();
+        const month = String(tempDate.getMonth() + 1).padStart(2, "0");
+        const day = String(tempDate.getDate()).padStart(2, "0");
+        const formattedDate = `${year}-${month}-${day}`;
+        console.log(formattedDate);
+
+        object[formattedDate] = { marked: true };
+        return object;
+      }, {});
+
+      console.log(transformedData);
+      setMarkedDates(transformedData);
+      setLoading(false); // Data fetching complete, set loading to false
+    } catch (error) {
+      console.error("Error updating markers: ", error);
+      setLoading(false); // Ensure loading state is reset in case of error
+    }
+  };
 
   const marked = useMemo(
     () => ({ [selected]: { selected: true } }),
@@ -79,11 +124,10 @@ export default function Page() {
         };
       });
 
-      console.log("entries ", objectEntries);
-
       return objectEntries;
     } catch (error) {
       console.error("Error importing data: ", error);
+      return [];
     }
   };
 
@@ -101,7 +145,6 @@ export default function Page() {
       return itemTimestamp >= timeToday && itemTimestamp < timeTomorrow;
     });
 
-    console.log(filteredEntries);
     setEntryToday(filteredEntries);
   };
 
@@ -186,7 +229,7 @@ export default function Page() {
         onDayPress={(day) => {
           handleDayPress(day);
         }}
-        markedDates={marked}
+        markedDates={{ ...markedDates, ...marked }}
         theme={{
           backgroundColor: "#ffffff",
           calendarBackground: "#ffffff",
@@ -244,8 +287,12 @@ export default function Page() {
     </View>
   );
 
+  if (loading) {
+    return <ActivityIndicator style={{ flex: 1, justifyContent: "center" }} />;
+  }
+
   return (
-    <View>
+    <View style={{ height: "100%" }}>
       <FlatList
         ListHeaderComponent={renderHeader}
         ListFooterComponent={renderFooter}
@@ -263,6 +310,36 @@ export default function Page() {
           />
         )}
       />
+      <View
+        style={{
+          backgroundColor: "black",
+          borderRadius: 50,
+          width: 60,
+          height: 60,
+          alignItems: "center",
+          justifyContent: "center",
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+          zIndex: 99999,
+        }}
+      >
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: "[input]",
+              params: { id: epochId, calendar: true },
+            })
+          }
+          onPressIn={() => handlePressIn(plusButtonScale2)}
+          onPressOut={() => handlePressOut(plusButtonScale2)}
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+        >
+          <Animated.View style={{ transform: [{ scale: plusButtonScale2 }] }}>
+            <FontAwesome size={20} name="plus" color="white" />
+          </Animated.View>
+        </Pressable>
+      </View>
     </View>
   );
 }

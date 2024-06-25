@@ -4,7 +4,6 @@ import {
   View,
   TextInput,
   Button,
-  StyleSheet,
   KeyboardAvoidingView,
   TouchableOpacity,
   Image,
@@ -18,7 +17,6 @@ import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 
 export default function InputScreen() {
-  const [entry, setEntry] = useState({});
   const [text, setText] = useState("");
   const [media, setMedia] = useState([]);
   const router = useRouter();
