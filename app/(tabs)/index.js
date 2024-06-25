@@ -104,7 +104,7 @@ export default function Page() {
             entry: entryData.entry,
             media: entryData.media,
           },
-          scale: 1,
+          scale: new Animated.Value(1),
         };
       });
       setEntryData(objectEntries.reverse());
@@ -259,11 +259,34 @@ export default function Page() {
     </View>
   );
 
+  const renderFooter = () => (
+    <View>
+      <Pressable
+        onPress={() => router.push({ pathname: "[input]" })}
+        onPressIn={() => handlePressIn(plusButtonScale1)}
+        onPressOut={() => handlePressOut(plusButtonScale1)}
+        hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+        style={{
+          borderRadius: 50,
+          alignItems: "center",
+          justifyContent: "center",
+          alignSelf: "center",
+          margin: 20,
+        }}
+      >
+        <Animated.View style={{ transform: [{ scale: plusButtonScale1 }] }}>
+          <FontAwesome size={40} name="plus" color="pink" />
+        </Animated.View>
+      </Pressable>
+    </View>
+  );
+
   return (
     <>
       <View>
         <FlatList
           ListHeaderComponent={renderHeader}
+          ListFooterComponent={renderFooter}
           ItemSeparatorComponent={({ highlighted }) => (
             <View style={{ height: 20 }} />
           )}
@@ -290,23 +313,6 @@ export default function Page() {
             />
           }
         />
-        <Pressable
-          onPress={() => router.push({ pathname: "[input]" })}
-          onPressIn={() => handlePressIn(plusButtonScale1)}
-          onPressOut={() => handlePressOut(plusButtonScale1)}
-          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
-          style={{
-            borderRadius: 50,
-            alignItems: "center",
-            justifyContent: "center",
-            alignSelf: "center",
-            marginTop: 20,
-          }}
-        >
-          <Animated.View style={{ transform: [{ scale: plusButtonScale1 }] }}>
-            <FontAwesome size={40} name="plus" color="pink" />
-          </Animated.View>
-        </Pressable>
       </View>
       <View
         style={{

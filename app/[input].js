@@ -22,7 +22,7 @@ export default function InputScreen() {
   const [text, setText] = useState("");
   const [media, setMedia] = useState([]);
   const router = useRouter();
-  const { id } = useLocalSearchParams();
+  const { id, calendar } = useLocalSearchParams();
 
   // [
   //   {
@@ -132,9 +132,8 @@ export default function InputScreen() {
 
   useEffect(() => {
     console.log("id: " + id);
-    if (id) {
+    if (calendar !== true) {
       getData(id);
-    } else {
     }
   }, []);
 
