@@ -157,10 +157,6 @@ export default function Page() {
       month: "long",
       day: "numeric",
     });
-    const formattedTime = date.toLocaleTimeString(undefined, {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
 
     return (
       <View
@@ -182,7 +178,7 @@ export default function Page() {
             <View>
               <Text style={{ height: 100 }}>{title}</Text>
               <Text style={{ textAlignVertical: "bottom" }}>
-                {`${formattedDate}, ${formattedTime}`}
+                {`${formattedDate}`}
               </Text>
             </View>
           </>
