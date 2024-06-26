@@ -1,5 +1,5 @@
 // app/input.js
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -15,12 +15,14 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
+import { ThemeContext } from "../helpers/ThemeContext";
 
 export default function InputScreen() {
   const [text, setText] = useState("");
   const [media, setMedia] = useState([]);
   const router = useRouter();
   const { id, calendar } = useLocalSearchParams();
+  const { theme } = useContext(ThemeContext);
 
   // [
   //   {

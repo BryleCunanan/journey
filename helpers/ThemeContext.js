@@ -27,7 +27,7 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     async function loadTheme() {
       try {
-        const storedTheme = await AsyncStorage.getItem("theme");
+        const storedTheme = await AsyncStorage.getItem("config_theme");
         if (storedTheme) {
           setTheme(JSON.parse(storedTheme));
         }
@@ -43,7 +43,7 @@ export const ThemeProvider = ({ children }) => {
     const newTheme = theme === lightTheme ? darkTheme : lightTheme;
     setTheme(newTheme);
     try {
-      await AsyncStorage.setItem("theme", JSON.stringify(newTheme));
+      await AsyncStorage.setItem("config_theme", JSON.stringify(newTheme));
     } catch (error) {
       console.error("Error saving theme to AsyncStorage:", error);
     }

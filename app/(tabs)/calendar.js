@@ -77,10 +77,10 @@ export default function Page() {
 
       console.log(transformedData);
       setMarkedDates(transformedData);
-      setLoading(false); // Data fetching complete, set loading to false
+      setLoading(false);
     } catch (error) {
       console.error("Error updating markers: ", error);
-      setLoading(false); // Ensure loading state is reset in case of error
+      setLoading(false);
     }
   };
 
