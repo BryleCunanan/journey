@@ -8,20 +8,28 @@ const ExampleComponent = () => {
 
   return (
     <View
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
+      style={{
+        flex: 1,
+        alignItems: "center",
+        // backgroundColor: theme.backgroundColor,
+        backgroundColor: "#F8EBDE",
+        padding: 10,
+      }}
     >
+      <View
+        style={{
+          backgroundColor: "#ffffff",
+          width: "80%",
+          height: "40%",
+          borderRadius: 25,
+          elevation: 5,
+        }}
+      ></View>
+
       <Text style={{ color: theme.textColor }}>Example Text</Text>
       <ThemeSwitcher />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default ExampleComponent;

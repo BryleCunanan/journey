@@ -1,5 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
+import { setStatusBarBackgroundColor } from "expo-status-bar";
 import { Button } from "react-native";
 
 export default function TabLayout() {
@@ -29,8 +30,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
-          headerTitleAlign: "center",
+          tabBarLabel: "Settings",
+          headerTitle: "SETTINGS",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="cog" color={color} />
           ),
