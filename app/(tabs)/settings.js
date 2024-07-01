@@ -42,7 +42,14 @@ const ExampleComponent = () => {
   );
 
   const FontFamilyDropdown = ({ fontFamily }) => (
-    <View style={{ width: 200, backgroundColor: "#ffffff" }}></View>
+    <View
+      style={{
+        width: 200,
+        backgroundColor: "rgba(205,183,169, 0.63)",
+      }}
+    >
+      <Text>{fontFamily}</Text>
+    </View>
   );
 
   return (
@@ -88,18 +95,38 @@ const ExampleComponent = () => {
                 console.log("Clicked");
               }}
               style={{
-                borderWidth: 2,
                 width: 200,
                 height: 30,
                 borderRadius: 25,
+                backgroundColor: "rgba(205,183,169, 0.63)",
               }}
             ></Pressable>
             <FlatList
+              ListFooterComponent={() => (
+                <View
+                  style={{
+                    width: "100%",
+                    height: 15,
+                    backgroundColor: "rgba(205,183,169, 0.63)",
+                    borderBottomLeftRadius: 25,
+                    borderBottomRightRadius: 25,
+                  }}
+                />
+              )}
               data={fontDropdown}
               renderItem={({ item }) => (
                 <FontFamilyDropdown fontFamily={item.fontFamily} />
               )}
               keyExtractor={(item) => item.id}
+              ItemSeparatorComponent={() => (
+                <View
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#CDB7A9",
+                    height: 1,
+                  }}
+                />
+              )}
             />
           </View>
         </View>
