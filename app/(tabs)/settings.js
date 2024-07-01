@@ -14,6 +14,20 @@ const ExampleComponent = () => {
     { id: "yellow", backgroundColor: "#ffbd59" },
   ];
 
+  const fontDropdown = [
+    { id: "poppins", fontFamily: "Poppins" },
+    { id: "inter", fontFamily: "Inter" },
+    { id: "satoshi", fontFamily: "Satoshi" },
+    { id: "open sans", fontFamily: "Open Sans" },
+    { id: "Roboto", fontFamily: "Roboto" },
+  ];
+
+  const reminders = [
+    { time: "5:25 PM", id: "firstReminder" },
+    { time: "6:25 PM", id: "secondReminder" },
+    { time: "7:25 PM", id: "thirdReminder" },
+  ];
+
   const BgColor = ({ backgroundColor }) => (
     <View
       style={{
@@ -26,13 +40,7 @@ const ExampleComponent = () => {
       }}
     ></View>
   );
-  const fontDropdown = [
-    { id: "poppins", fontFamily: "Poppins" },
-    { id: "inter", fontFamily: "Inter" },
-    { id: "satoshi", fontFamily: "Satoshi" },
-    { id: "open sans", fontFamily: "Open Sans" },
-    { id: "Roboto", fontFamily: "Roboto" },
-  ];
+
   const FontFamilyDropdown = ({ fontFamily }) => (
     <View style={{ width: 200, backgroundColor: "#ffffff" }}></View>
   );
@@ -77,7 +85,7 @@ const ExampleComponent = () => {
           <View>
             <Pressable
               onPress={() => {
-                console.log("Clicked") ;
+                console.log("Clicked");
               }}
               style={{
                 borderWidth: 2,
@@ -103,11 +111,103 @@ const ExampleComponent = () => {
         style={{
           backgroundColor: "#ffffff",
           width: "100%",
-          height: "40%",
+          // height: "40%",
           borderRadius: 25,
           elevation: 5,
+          padding: 20,
         }}
-      ></View>
+      >
+        <View style={{ gap: 10 }}>
+          <Text style={{ fontWeight: "bold" }}>Notification</Text>
+          <View style={{ alignItems: "center" }}>
+            <View
+              style={{
+                backgroundColor: "rgba(205,183,169, 0.63)",
+                width: "80%",
+                height: 32,
+                borderRadius: 25,
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 5,
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "rgba(205,183,169, 0.63)",
+                  width: "48%",
+                  height: "100%",
+                  borderRadius: 25,
+                  position: "relative",
+                  alignSelf: "flex-start",
+                }}
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  position: "absolute",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <Text>ON</Text>
+                <View
+                  style={{
+                    width: 2,
+                    height: "50%",
+                    backgroundColor: "#CDB7A9",
+                  }}
+                />
+                <Text>OFF</Text>
+              </View>
+            </View>
+          </View>
+          <View style={{ gap: 10 }}>
+            <View>
+              <Text style={{ fontWeight: "bold" }}>Daily Reminder</Text>
+              <Text style={{ fontSize: 12 }}>Set upto 3 daily reminders</Text>
+            </View>
+            <FlatList
+              data={reminders}
+              ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+              renderItem={({ item }) => (
+                <View style={{ alignItems: "center" }}>
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      height: 32,
+                      borderRadius: 20,
+                      width: "80%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text>{item.time}</Text>
+                  </View>
+                </View>
+              )}
+              ListFooterComponent={() => (
+                <View style={{ alignItems: "center" }}>
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      height: 32,
+                      borderRadius: 20,
+                      width: "80%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    <Text>+</Text>
+                  </View>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+      </View>
 
       <Text style={{ color: theme.textColor }}>Example Text</Text>
       <ThemeSwitcher />
