@@ -1,10 +1,13 @@
 import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ThemeContext } from "../../helpers/ThemeContext";
 import ThemeSwitcher from "../../components/ThemeSwitcher";
+import Slider from "@react-native-community/slider";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const ExampleComponent = () => {
   const { theme } = useContext(ThemeContext);
+  const [isDropDown, setIsDropDown] = useState(false);
 
   const themeColor = [
     { id: "red", backgroundColor: "#ff6c6c" },
@@ -28,11 +31,15 @@ const ExampleComponent = () => {
     { time: "7:25 PM", id: "thirdReminder" },
   ];
 
+  const handleDropdown = () => {
+    setIsDropDown(!isDropDown);
+  };
+
   const BgColor = ({ backgroundColor }) => (
     <View
       style={{
-        height: 32,
-        width: 32,
+        height: 24,
+        width: 24,
         borderRadius: 50,
         borderWidth: 1,
         borderColor: "#b28771",
@@ -44,8 +51,9 @@ const ExampleComponent = () => {
   const FontFamilyDropdown = ({ fontFamily }) => (
     <View
       style={{
-        width: 200,
-        backgroundColor: "rgba(205,183,169, 0.63)",
+        width: "100%",
+        paddingVertical: 4,
+        // backgroundColor: "rgba(205,183,169, 0.63)",
       }}
     >
       <Text>{fontFamily}</Text>
@@ -72,9 +80,10 @@ const ExampleComponent = () => {
           borderRadius: 25,
           elevation: 8,
           padding: 20,
+          gap: 10,
         }}
       >
-        <Text>Appearance</Text>
+        <Text style={{ fontWeight: "bold" }}>Appearance</Text>
         <Text>Themes</Text>
         <View style={{ alignItems: "center" }}>
           <FlatList
@@ -87,51 +96,122 @@ const ExampleComponent = () => {
             ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
           />
         </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text>Font Style</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <Text style={{ justifyContent: "center" }}>Font Style</Text>
           <View>
-            <Pressable
-              onPress={() => {
-                console.log("Clicked");
-              }}
-              style={{
-                width: 200,
-                height: 30,
-                borderRadius: 25,
-                backgroundColor: "rgba(205,183,169, 0.63)",
-              }}
-            ></Pressable>
-            <FlatList
-              ListFooterComponent={() => (
-                <View
-                  style={{
-                    width: "100%",
-                    height: 15,
-                    backgroundColor: "rgba(205,183,169, 0.63)",
-                    borderBottomLeftRadius: 25,
-                    borderBottomRightRadius: 25,
-                  }}
-                />
-              )}
-              data={fontDropdown}
-              renderItem={({ item }) => (
-                <FontFamilyDropdown fontFamily={item.fontFamily} />
-              )}
-              keyExtractor={(item) => item.id}
-              ItemSeparatorComponent={() => (
-                <View
-                  style={{
-                    width: "100%",
-                    backgroundColor: "#CDB7A9",
-                    height: 1,
-                  }}
-                />
-              )}
-            />
+            <View>
+              <Pressable
+                onPress={handleDropdown}
+                style={{
+                  width: 200,
+                  height: 30,
+                  borderRadius: 25,
+                  backgroundColor: "#F8EBDE",
+                  zIndex: 2,
+                  borderWidth: 1,
+                  borderColor: "#CDB7A9",
+                  paddingHorizontal: 10,
+                  justifyContent: "center",
+                }}
+              >
+                {isDropDown ? (
+                  <FontAwesome
+                    name="caret-up"
+                    color="#CDB7A9"
+                    size={20}
+                    style={{ alignSelf: "flex-end" }}
+                  />
+                ) : (
+                  <FontAwesome
+                    name="caret-down"
+                    color="#CDB7A9"
+                    size={20}
+                    style={{ alignSelf: "flex-end" }}
+                  />
+                )}
+              </Pressable>
+            </View>
+            {isDropDown ? (
+              <FlatList
+                style={{
+                  backgroundColor: "#F8EBDE",
+                  padding: 10,
+                  paddingTop: 20,
+                  width: "100%",
+                  alignSelf: "center",
+                  borderBottomLeftRadius: 12,
+                  borderBottomRightRadius: 12,
+                  position: "absolute",
+                  marginTop: 16,
+                  zIndex: 1,
+                }}
+                data={fontDropdown}
+                renderItem={({ item }) => (
+                  <FontFamilyDropdown fontFamily={item.fontFamily} />
+                )}
+                keyExtractor={(item) => item.id}
+                ItemSeparatorComponent={() => (
+                  <View
+                    style={{
+                      width: "100%",
+                      backgroundColor: "#CDB7A9",
+                      height: 1,
+                    }}
+                  />
+                )}
+              />
+            ) : null}
           </View>
         </View>
 
         <Text>Font Size</Text>
+        <View
+          style={{
+            justifyContent: "center",
+            // maxWidth: 200,
+          }}
+        >
+          <Slider
+            minimumValue={0}
+            maximumValue={2}
+            minimumTrackTintColor="#CDB7A9"
+            maximumTrackTintColor="#CDB7A9"
+            thumbTintColor="#CDB7A9"
+            step={1}
+          />
+          <View
+            style={{
+              backgroundColor: "#CDB7A9",
+              width: 8,
+              height: 8,
+              borderRadius: 50,
+              position: "absolute",
+              alignSelf: "center",
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: "#CDB7A9",
+              width: 8,
+              height: 8,
+              borderRadius: 50,
+              position: "absolute",
+              alignSelf: "flex-start",
+              transform: "translateX(12px)",
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: "#CDB7A9",
+              width: 8,
+              height: 8,
+              borderRadius: 50,
+              position: "absolute",
+              alignSelf: "flex-end",
+              transform: "translateX(-12px)",
+            }}
+          />
+        </View>
       </View>
 
       <View //Container for notification
@@ -160,7 +240,7 @@ const ExampleComponent = () => {
             >
               <View
                 style={{
-                  backgroundColor: "rgba(205,183,169, 0.63)",
+                  backgroundColor: "rgba(205,183,169, 1)",
                   width: "48%",
                   height: "100%",
                   borderRadius: 25,
