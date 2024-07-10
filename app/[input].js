@@ -9,6 +9,7 @@ import {
   Image,
   FlatList,
   Pressable,
+  Text,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -164,7 +165,7 @@ export default function InputScreen() {
               },
             ]}
           >
-            <FontAwesome size={20} name="close" color="white" />
+            <FontAwesome size={20} name="close" color={theme.primaryColor} />
           </Pressable>
         </View>
       </>
@@ -173,7 +174,9 @@ export default function InputScreen() {
 
   return (
     <>
-      <View style={{ flex: 1, padding: 16 }}>
+      <View
+        style={{ flex: 1, padding: 16, backgroundColor: theme.primaryColor }}
+      >
         <View>
           <FlatList
             ItemSeparatorComponent={({ highlighted }) => (
@@ -187,26 +190,49 @@ export default function InputScreen() {
             horizontal={true}
           />
         </View>
-        <View style={{ padding: 10, backgroundColor: "pink", margin: 20 }}>
+        <View
+          style={{
+            padding: 10,
+            backgroundColor: theme.secondaryColor,
+            margin: 20,
+
+            borderRadius: 12,
+          }}
+        >
           <TextInput
             style={{
               // height: 100,
               textAlignVertical: "top",
+              color: theme.primaryColor,
             }}
             multiline
             placeholder="What are you feeling today?"
+            placeholderTextColor={theme.primaryColor}
             value={text}
             onChangeText={setText}
             autoFocus
             rows={7}
           />
         </View>
-        <Button title="Save" onPress={handleSave} />
+        <Pressable
+          style={{
+            height: 32,
+            width: 56,
+            backgroundColor: theme.secondaryColor,
+            justifyContent: "center",
+            alignSelf: "flex-end",
+            marginRight: 20,
+          }}
+        >
+          <Text style={{ color: theme.primaryColor, textAlign: "center" }}>
+            Save
+          </Text>
+        </Pressable>
       </View>
       <KeyboardAvoidingView
         behavior="padding"
         style={{
-          backgroundColor: "pink",
+          backgroundColor: theme.secondaryColor,
           height: 40,
           display: "flex",
           flexDirection: "row",
@@ -215,10 +241,10 @@ export default function InputScreen() {
         }}
       >
         <TouchableOpacity style={{ padding: 10 }} onPress={takePhotoWithCamera}>
-          <FontAwesome size={20} name="camera" color="white" />
+          <FontAwesome size={20} name="camera" color={theme.primaryColor} />
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10 }}>
-          <FontAwesome size={20} name="image" color="white" />
+          <FontAwesome size={20} name="image" color={theme.primaryColor} />
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import {
   View,
   useWindowDimensions,
@@ -18,17 +18,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
 
 import * as MediaLibrary from "expo-media-library";
+import { ThemeContext } from "../../helpers/ThemeContext";
 
 export default function Page() {
   const [quoteForToday, setQuoteForToday] = useState(null);
   const [entryData, setEntryData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-
   const api_url = "https://zenquotes.io/api/today";
   const { width } = useWindowDimensions();
   const router = useRouter();
   const plusButtonScale1 = useState(new Animated.Value(1))[0];
   const plusButtonScale2 = useState(new Animated.Value(1))[0];
+  const copyButtonScale = useState(new Animated.Value(1))[0];
+  const { theme } = useContext(ThemeContext);
 
   const debounce = (func, delay) => {
     let timeoutId;
@@ -179,17 +181,32 @@ export default function Page() {
     });
 
     return (
-      <View>
+      <View
+        style={{
+          marginHorizontal: 20,
+        }}
+      >
         <TouchableHighlight
           onPress={() => router.push({ pathname: "[input]", params: { id } })}
           onShowUnderlay={separators.highlight}
           onHideUnderlay={separators.unhighlight}
-          style={{ backgroundColor: "pink", padding: 10 }}
+          style={{
+            backgroundColor: theme.secondaryColor,
+            padding: 10,
+            borderRadius: 25,
+          }}
         >
           <>
             <View>
-              <Text style={{ height: 100 }}>{title}</Text>
-              <Text style={{ textAlignVertical: "bottom" }}>
+              <Text style={{ height: 100, color: theme.primaryColor }}>
+                {title}
+              </Text>
+              <Text
+                style={{
+                  textAlignVertical: "bottom",
+                  color: theme.primaryColor,
+                }}
+              >
                 {`${formattedDate}`}
               </Text>
             </View>
@@ -216,7 +233,7 @@ export default function Page() {
             ]}
           >
             <Animated.View style={{ transform: [{ scale }] }}>
-              <FontAwesome size={20} name="trash" color="white" />
+              <FontAwesome size={20} name="trash" color={theme.primaryColor} />
             </Animated.View>
           </Pressable>
         </View>
@@ -235,21 +252,51 @@ export default function Page() {
               textAlign: "center",
               fontSize: 20,
               fontStyle: "italic",
+              color: theme.secondaryColor,
             }}
           />
-          <View style={{ width: 80, alignSelf: "flex-end", marginRight: 20 }}>
-            <Button
-              title="Copy"
-              color="pink"
-              onPress={() => Clipboard.setString(quoteForToday.copy)}
-            />
+          <View
+            style={{
+              alignSelf: "flex-end",
+              marginRight: 20,
+            }}
+          >
+            <Pressable
+              onPress={() => {
+                console.log("copied");
+                Clipboard.setString(quoteForToday.copy);
+              }}
+              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+              onPressIn={() => handlePressIn(copyButtonScale)}
+              onPressOut={() => handlePressOut(copyButtonScale)}
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed
+                    ? "rgba(0, 0, 0, 0.4)"
+                    : "transparent",
+
+                  borderRadius: 50,
+                  padding: 10,
+                },
+              ]}
+            >
+              <Animated.View
+                style={{ transform: [{ scale: copyButtonScale }] }}
+              >
+                <FontAwesome
+                  color={theme.secondaryColor}
+                  name="copy"
+                  size={20}
+                />
+              </Animated.View>
+            </Pressable>
           </View>
         </>
       ) : (
         <ActivityIndicator
           style={{ marginTop: 20 }}
           size="large"
-          color="pink"
+          color={theme.secondaryColor}
         />
       )}
     </View>
@@ -271,15 +318,15 @@ export default function Page() {
         }}
       >
         <Animated.View style={{ transform: [{ scale: plusButtonScale1 }] }}>
-          <FontAwesome size={40} name="plus" color="pink" />
+          <FontAwesome size={40} name="plus" color={theme.secondaryColor} />
         </Animated.View>
       </Pressable>
     </View>
   );
 
   return (
-    <>
-      <View>
+    <View style={{ backgroundColor: theme.primaryColor, height: "100%" }}>
+      <View style={{}}>
         <FlatList
           ListHeaderComponent={renderHeader}
           ListFooterComponent={renderFooter}
@@ -312,7 +359,8 @@ export default function Page() {
       </View>
       <View
         style={{
-          backgroundColor: "black",
+          backgroundColor: theme.primaryColor,
+          // opacity: 0.95,
           borderRadius: 50,
           width: 60,
           height: 60,
@@ -322,6 +370,7 @@ export default function Page() {
           bottom: 20,
           right: 20,
           zIndex: 99999,
+          elevation: 5,
         }}
       >
         <Pressable
@@ -331,10 +380,10 @@ export default function Page() {
           hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
         >
           <Animated.View style={{ transform: [{ scale: plusButtonScale2 }] }}>
-            <FontAwesome size={20} name="plus" color="white" />
+            <FontAwesome size={20} name="plus" color={theme.secondaryColor} />
           </Animated.View>
         </Pressable>
       </View>
-    </>
+    </View>
   );
 }

@@ -16,6 +16,7 @@ export default function TabLayout() {
           borderTopWidth: 0,
           elevation: 0,
         },
+        tabBarInactiveTintColor: "rgba(0,0,0,0.4)",
         headerStyle: { backgroundColor: theme.primaryColor, elevation: 0 },
         headerTintColor: theme.secondaryColor,
         headerTitleStyle: { fontWeight: "bold" },

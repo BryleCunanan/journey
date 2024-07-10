@@ -1,4 +1,10 @@
-import React, { useMemo, useState, useCallback, useEffect } from "react";
+import React, {
+  useMemo,
+  useState,
+  useCallback,
+  useEffect,
+  useContext,
+} from "react";
 import {
   View,
   Text,
@@ -12,8 +18,10 @@ import { Calendar } from "react-native-calendars";
 import { useRouter, useFocusEffect } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeContext } from "../../helpers/ThemeContext";
 
 export default function Page() {
+  const { theme } = useContext(ThemeContext);
   const currentDate = new Date(Date.now());
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -169,15 +177,22 @@ export default function Page() {
           onShowUnderlay={separators.highlight}
           onHideUnderlay={separators.unhighlight}
           style={{
-            backgroundColor: "pink",
+            backgroundColor: theme.secondaryColor,
             padding: 15,
             borderRadius: 25,
           }}
         >
           <>
             <View>
-              <Text style={{ height: 100 }}>{title}</Text>
-              <Text style={{ textAlignVertical: "bottom" }}>
+              <Text style={{ height: 100, color: theme.primaryColor }}>
+                {title}
+              </Text>
+              <Text
+                style={{
+                  textAlignVertical: "bottom",
+                  color: theme.primaryColor,
+                }}
+              >
                 {`${formattedDate}`}
               </Text>
             </View>
@@ -204,7 +219,7 @@ export default function Page() {
             ]}
           >
             <Animated.View style={{ transform: [{ scale }] }}>
-              <FontAwesome size={20} name="trash" color="white" />
+              <FontAwesome size={20} name="trash" color={theme.primaryColor} />
             </Animated.View>
           </Pressable>
         </View>
@@ -216,8 +231,6 @@ export default function Page() {
     <View style={{ marginBottom: 10 }}>
       <Calendar
         style={{
-          borderWidth: 1,
-          borderColor: "gray",
           borderRadius: 25,
           height: 375,
           margin: 10,
@@ -227,24 +240,21 @@ export default function Page() {
         }}
         markedDates={{ ...markedDates, ...marked }}
         theme={{
-          backgroundColor: "#ffffff",
-          calendarBackground: "#ffffff",
+          // backgroundColor: theme.secondaryColor,
+          calendarBackground: theme.secondaryColor,
           textSectionTitleColor: "#b6c1cd",
           textSectionTitleDisabledColor: "#d9e1e8",
-          selectedDayBackgroundColor: "#00adf5",
-          selectedDayTextColor: "#ffffff",
+          selectedDayBackgroundColor: theme.primaryColor,
+          selectedDayTextColor: theme.secondaryColor,
           todayTextColor: "#00adf5",
-          dayTextColor: "#2d4150",
+          dayTextColor: theme.primaryColor,
           textDisabledColor: "#d9e1e8",
-          dotColor: "#00adf5",
-          selectedDotColor: "#ffffff",
-          arrowColor: "orange",
+          dotColor: theme.primaryColor,
+          selectedDotColor: theme.secondaryColor,
+          arrowColor: theme.primaryColor,
           disabledArrowColor: "#d9e1e8",
-          monthTextColor: "blue",
-          indicatorColor: "blue",
-          textDayFontFamily: "monospace",
-          textMonthFontFamily: "monospace",
-          textDayHeaderFontFamily: "monospace",
+          monthTextColor: theme.primaryColor,
+          indicatorColor: theme.primaryColor,
           textDayFontWeight: "300",
           textMonthFontWeight: "bold",
           textDayHeaderFontWeight: "300",
@@ -277,7 +287,7 @@ export default function Page() {
         }}
       >
         <Animated.View style={{ transform: [{ scale: plusButtonScale1 }] }}>
-          <FontAwesome size={40} name="plus" color="pink" />
+          <FontAwesome size={40} name="plus" color={theme.secondaryColor} />
         </Animated.View>
       </Pressable>
     </View>
@@ -288,7 +298,7 @@ export default function Page() {
   }
 
   return (
-    <View style={{ height: "100%" }}>
+    <View style={{ height: "100%", backgroundColor: theme.primaryColor }}>
       <FlatList
         ListHeaderComponent={renderHeader}
         ListFooterComponent={renderFooter}
@@ -308,7 +318,7 @@ export default function Page() {
       />
       <View
         style={{
-          backgroundColor: "black",
+          backgroundColor: theme.primaryColor,
           borderRadius: 50,
           width: 60,
           height: 60,
@@ -318,6 +328,7 @@ export default function Page() {
           bottom: 20,
           right: 20,
           zIndex: 99999,
+          elevation: 5,
         }}
       >
         <Pressable
@@ -332,7 +343,7 @@ export default function Page() {
           hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
         >
           <Animated.View style={{ transform: [{ scale: plusButtonScale2 }] }}>
-            <FontAwesome size={20} name="plus" color="white" />
+            <FontAwesome size={20} name="plus" color={theme.secondaryColor} />
           </Animated.View>
         </Pressable>
       </View>

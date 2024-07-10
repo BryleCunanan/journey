@@ -1,14 +1,38 @@
 import { Stack } from "expo-router/stack";
-import React from "react";
-import { ThemeProvider } from "../helpers/ThemeContext";
+import React, { useContext } from "react";
+import { ThemeContext, ThemeProvider } from "../helpers/ThemeContext";
 
 export default function Layout() {
   return (
     <ThemeProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="[input]" options={{ title: "Add Entry" }} />
-      </Stack>
+      <ThemedStack />
     </ThemeProvider>
   );
 }
+
+const ThemedStack = () => {
+  const { theme } = useContext(ThemeContext);
+  return (
+    <Stack>
+      <Stack.Screen
+        name="(tabs)"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="[input]"
+        options={{
+          contentStyle: { backgroundColor: theme.primaryColor },
+          title: "Add Entry",
+          headerStyle: {
+            backgroundColor: theme.primaryColor,
+          },
+          headerShadowVisible: false,
+          headerTintColor: theme.secondaryColor,
+          headerTitleStyle: { fontWeight: "bold" },
+        }}
+      />
+    </Stack>
+  );
+};

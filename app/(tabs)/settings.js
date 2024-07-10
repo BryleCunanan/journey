@@ -10,11 +10,11 @@ const ExampleComponent = () => {
   const [isDropDown, setIsDropDown] = useState(false);
 
   const themeColor = [
-    { id: "lightViolet", backgroundColor: "#fff9f9" },
-    { id: "darkBlue", backgroundColor: "#466380" },
-    { id: "whiteBlack", backgroundColor: "#8c52ff" },
-    { id: "yellowPink", backgroundColor: "#0cc0df" },
-    { id: "blueOrange", backgroundColor: "#ffbd59" },
+    { id: "lightViolet", backgroundColor: "#d8d6da" },
+    { id: "darkBlue", backgroundColor: "#10222c" },
+    { id: "whiteBlack", backgroundColor: "#f9fffe" },
+    { id: "yellowPink", backgroundColor: "#ffaf28" },
+    { id: "blueOrange", backgroundColor: "#2c114d" },
   ];
 
   const fontDropdown = [
