@@ -285,7 +285,7 @@ const ExampleComponent = () => {
                 width: "80%",
                 borderColor: theme.primaryColor,
                 borderWidth: 1,
-                height: 32,
+                height: 42,
                 borderRadius: 25,
                 alignItems: "center",
                 justifyContent: "center",
@@ -311,6 +311,13 @@ const ExampleComponent = () => {
                       ? theme.primaryColor
                       : theme.secondaryColor,
                     borderRadius: 25,
+                    flex: 1,
+                    justifyContent: "center",
+                  }}
+                  onPress={() => {
+                    if (toggleNotification == false) {
+                      setToggleNotification(true);
+                    }
                   }}
                 >
                   <Text
@@ -324,13 +331,6 @@ const ExampleComponent = () => {
                     ON
                   </Text>
                 </Pressable>
-                <View
-                  style={{
-                    width: 2,
-                    height: "50%",
-                    backgroundColor: theme.primaryColor,
-                  }}
-                />
                 <Pressable
                   style={{
                     width: "48%",
@@ -339,6 +339,14 @@ const ExampleComponent = () => {
                     backgroundColor: toggleNotification
                       ? theme.secondaryColor
                       : theme.primaryColor,
+
+                    flex: 1,
+                    justifyContent: "center",
+                  }}
+                  onPress={() => {
+                    if (toggleNotification == true) {
+                      setToggleNotification(false);
+                    }
                   }}
                 >
                   <Text
