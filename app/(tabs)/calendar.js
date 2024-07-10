@@ -173,7 +173,12 @@ export default function Page() {
         }}
       >
         <TouchableHighlight
-          onPress={() => router.push({ pathname: "[input]" })}
+          onPress={() =>
+            router.push({
+              pathname: "[input]",
+              params: { id: epochId, calendar: true },
+            })
+          }
           onShowUnderlay={separators.highlight}
           onHideUnderlay={separators.unhighlight}
           style={{

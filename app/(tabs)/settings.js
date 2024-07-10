@@ -1,13 +1,13 @@
-import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { View, Text, FlatList, Pressable } from "react-native";
 import React, { useContext, useState } from "react";
 import { ThemeContext } from "../../helpers/ThemeContext";
-import ThemeSwitcher from "../../components/ThemeSwitcher";
 import Slider from "@react-native-community/slider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const ExampleComponent = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [isDropDown, setIsDropDown] = useState(false);
+  const [toggleNotification, setToggleNotification] = useState(false);
 
   const themeColor = [
     { id: "lightViolet", backgroundColor: "#d8d6da" },
@@ -270,7 +270,6 @@ const ExampleComponent = () => {
         style={{
           backgroundColor: theme.secondaryColor,
           width: "100%",
-          // height: "40%",
           borderRadius: 25,
           elevation: 5,
           padding: 20,
@@ -283,7 +282,6 @@ const ExampleComponent = () => {
           <View style={{ alignItems: "center" }}>
             <View
               style={{
-                // backgroundColor: theme.primaryColor,
                 width: "80%",
                 borderColor: theme.primaryColor,
                 borderWidth: 1,
@@ -291,30 +289,41 @@ const ExampleComponent = () => {
                 borderRadius: 25,
                 alignItems: "center",
                 justifyContent: "center",
-                padding: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
               }}
             >
               <View
                 style={{
-                  backgroundColor: theme.primaryColor,
-                  width: "48%",
-                  height: "100%",
-                  borderRadius: 25,
-                  position: "relative",
-                  alignSelf: "flex-start",
-                }}
-              />
-              <View
-                style={{
                   flexDirection: "row",
-                  justifyContent: "space-evenly",
+                  justifyContent: "space-between",
                   position: "absolute",
                   alignItems: "center",
                   width: "100%",
                   height: "100%",
                 }}
               >
-                <Text style={{ color: theme.primaryColor }}>ON</Text>
+                <Pressable
+                  style={{
+                    width: "48%",
+                    height: "100%",
+                    backgroundColor: toggleNotification
+                      ? theme.primaryColor
+                      : theme.secondaryColor,
+                    borderRadius: 25,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: toggleNotification
+                        ? theme.secondaryColor
+                        : theme.primaryColor,
+                      textAlign: "center",
+                    }}
+                  >
+                    ON
+                  </Text>
+                </Pressable>
                 <View
                   style={{
                     width: 2,
@@ -322,7 +331,27 @@ const ExampleComponent = () => {
                     backgroundColor: theme.primaryColor,
                   }}
                 />
-                <Text style={{ color: theme.primaryColor }}>OFF</Text>
+                <Pressable
+                  style={{
+                    width: "48%",
+                    height: "100%",
+                    borderRadius: 25,
+                    backgroundColor: toggleNotification
+                      ? theme.secondaryColor
+                      : theme.primaryColor,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: toggleNotification
+                        ? theme.primaryColor
+                        : theme.secondaryColor,
+                      textAlign: "center",
+                    }}
+                  >
+                    OFF
+                  </Text>
+                </Pressable>
               </View>
             </View>
           </View>

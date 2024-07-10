@@ -133,7 +133,11 @@ export default function InputScreen() {
 
   useEffect(() => {
     console.log("id: " + id);
-    if (calendar !== true) {
+    console.log("calendar:" + calendar);
+
+    // if wala sa calendar at may id, go in
+    if (id !== undefined) {
+      console.log("nakakapasok ako dito");
       getData(id);
     }
   }, []);
@@ -223,6 +227,7 @@ export default function InputScreen() {
             alignSelf: "flex-end",
             marginRight: 20,
           }}
+          onPress={handleSave}
         >
           <Text style={{ color: theme.primaryColor, textAlign: "center" }}>
             Save

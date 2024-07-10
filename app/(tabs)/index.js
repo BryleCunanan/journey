@@ -187,7 +187,12 @@ export default function Page() {
         }}
       >
         <TouchableHighlight
-          onPress={() => router.push({ pathname: "[input]", params: { id } })}
+          onPress={() =>
+            router.push({
+              pathname: "[input]",
+              params: { id, calendar: false },
+            })
+          }
           onShowUnderlay={separators.highlight}
           onHideUnderlay={separators.unhighlight}
           style={{
@@ -305,7 +310,9 @@ export default function Page() {
   const renderFooter = () => (
     <View>
       <Pressable
-        onPress={() => router.push({ pathname: "[input]" })}
+        onPress={() =>
+          router.push({ pathname: "[input]", params: { calendar: true } })
+        }
         onPressIn={() => handlePressIn(plusButtonScale1)}
         onPressOut={() => handlePressOut(plusButtonScale1)}
         hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
@@ -351,7 +358,8 @@ export default function Page() {
                 setRefreshing(true);
                 importData();
               }}
-              colors={["#9Bd35A", "#689F38"]}
+              colors={[theme.primaryColor, theme.secondaryColor]}
+              progressBackgroundColor={theme.secondaryColor}
               progressViewOffset={10}
             />
           }
@@ -374,7 +382,9 @@ export default function Page() {
         }}
       >
         <Pressable
-          onPress={() => router.push({ pathname: "[input]" })}
+          onPress={() =>
+            router.push({ pathname: "[input]", params: { id: -1 } })
+          }
           onPressIn={() => handlePressIn(plusButtonScale2)}
           onPressOut={() => handlePressOut(plusButtonScale2)}
           hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
