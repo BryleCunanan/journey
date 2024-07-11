@@ -1,57 +1,138 @@
-import React, { useContext } from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ThemeContext } from "../../helpers/ThemeContext";
+import { BlurView } from "expo-blur";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
-const ReminderList = ({ data }) => {
+const ReminderList = () => {
   const { theme } = useContext(ThemeContext);
+  const [reminders, setReminders] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(true);
+
+  //   const reminders = [
+  //     { time: "5:25 PM", id: "firstReminder" },
+  //     { time: "6:25 PM", id: "secondReminder" },
+  //   ];
+
+  const ReminderFooter = () => {
+    return reminders.length < 3 ? (
+      <View style={{ alignItems: "center" }}>
+        <Pressable
+          style={{
+            borderRadius: 4,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 8,
+            borderColor: theme.primaryColor,
+          }}
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+          onPress={() => {
+            setIsModalVisible(true);
+          }}
+        >
+          <FontAwesome
+            name="plus-square-o"
+            size={36}
+            color={theme.primaryColor}
+          />
+        </Pressable>
+      </View>
+    ) : (
+      <></>
+    );
+  };
 
   const handleAddReminder = () => {
-    console.log("added");
+    if (reminders.length < 3) {
+      console.log("length", reminders.length);
+      const newReminders = [...reminders];
+      const newEntry = { time: "5:25 PM", id: "firstRemider" };
+      newReminders.push(newEntry);
+      setReminders(newReminders);
+    }
   };
+
   return (
-    <FlatList
-      data={data}
-      ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-      renderItem={({ item }) => (
-        <View style={{ alignItems: "center" }}>
-          <View
-            style={{
-              borderWidth: 2,
-              height: 42,
-              borderRadius: 20,
-              width: "80%",
-              alignItems: "center",
-              justifyContent: "center",
-              borderColor: theme.primaryColor,
-            }}
-          >
-            <Text style={{ color: theme.primaryColor }}>{item.time}</Text>
+    <>
+      <FlatList
+        data={[]}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        renderItem={({ item }) => (
+          <View style={{ alignItems: "center" }}>
+            <View
+              style={{
+                borderWidth: 2,
+                height: 42,
+                borderRadius: 20,
+                width: "80%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderColor: theme.primaryColor,
+              }}
+            >
+              <Text style={{ color: theme.primaryColor }}>{item.time}</Text>
+            </View>
           </View>
-        </View>
-      )}
-      ListFooterComponent={() => (
-        <View style={{ alignItems: "center" }}>
+        )}
+        ListFooterComponent={ReminderFooter}
+      />
+      <Modal
+        transparent={true}
+        visible={isModalVisible}
+        statusBarTranslucent={true}
+        animationType="fade"
+      >
+        <BlurView
+          intensity={40}
+          experimentalBlurMethod="dimezisBlurView"
+          blurReductionFactor={6}
+          //   tint="dark"
+        >
           <Pressable
             style={{
-              borderRadius: 4,
+              width: "100%",
+              height: "100%",
               alignItems: "center",
               justifyContent: "center",
-              marginTop: 8,
-              borderColor: theme.primaryColor,
             }}
-            hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
-            onPress={handleAddReminder}
+            onPress={() => {
+              setIsModalVisible(false);
+            }}
           >
-            <FontAwesome
-              name="plus-square-o"
-              size={36}
-              color={theme.primaryColor}
-            />
+            <Pressable
+              style={{
+                width: "60%",
+                height: "30%",
+                backgroundColor: theme.secondaryColor,
+                elevation: 5,
+                borderRadius: 14,
+              }}
+              onPress={() => {}}
+            >
+              <RNDateTimePicker
+                mode="time"
+                display="spinner"
+                value={new Date()}
+              />
+              <Pressable
+                style={{
+                  width: 32,
+                  backgroundColor: theme.primaryColor,
+                  height: 24,
+                  borderRadius: 4,
+                }}
+                onPress={() => {
+                  setIsModalVisible(false);
+                }}
+              >
+                <Text>Back</Text>
+              </Pressable>
+            </Pressable>
           </Pressable>
-        </View>
-      )}
-    />
+        </BlurView>
+      </Modal>
+    </>
   );
 };
 

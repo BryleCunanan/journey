@@ -28,11 +28,6 @@ const Settings = () => {
     { id: "roboto", fontFamily: "Roboto" },
   ];
 
-  const reminders = [
-    { time: "5:25 PM", id: "firstReminder" },
-    { time: "6:25 PM", id: "secondReminder" },
-  ];
-
   return (
     <Pressable //main page
       style={{
@@ -127,7 +122,7 @@ const Settings = () => {
                 Set upto 3 daily reminders
               </Text>
             </View>
-            <ReminderList data={reminders} />
+            <ReminderList />
           </View>
         </View>
       </View>
