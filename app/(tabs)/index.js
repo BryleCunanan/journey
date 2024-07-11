@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback, useContext } from "react";
 import {
   View,
   useWindowDimensions,
-  Button,
   Pressable,
   FlatList,
   Text,

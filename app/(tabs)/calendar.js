@@ -334,6 +334,10 @@ export default function Page() {
           right: 20,
           zIndex: 99999,
           elevation: 5,
+          shadowColor: "#000000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.3,
+          shadowRadius: 2,
         }}
       >
         <Pressable

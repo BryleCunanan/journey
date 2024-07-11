@@ -7,7 +7,7 @@ import { BlurView } from "expo-blur";
 const ReminderList = () => {
   const { theme } = useContext(ThemeContext);
   const [reminders, setReminders] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   //   const reminders = [
   //     { time: "5:25 PM", id: "firstReminder" },
@@ -119,7 +119,18 @@ const ReminderList = () => {
               }}
               onPress={() => {}}
             >
-              <FlatList data={hours} />
+              <FlatList
+                data={hours}
+                renderItem={({ item }) => {
+                  return (
+                    <View>
+                      <Text>{item}</Text>
+                    </View>
+                  );
+                }}
+                // style={{ height: 0 }}
+                windowSize={1}
+              />
               <Pressable
                 style={{
                   width: 32,
