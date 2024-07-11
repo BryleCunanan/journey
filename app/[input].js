@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   TextInput,
-  Button,
   KeyboardAvoidingView,
   TouchableOpacity,
   Image,
@@ -102,6 +101,32 @@ export default function InputScreen() {
           to: newPath,
         });
         addMedia(fileName, newPath);
+      } catch (error) {
+        console.error("Error moving image:", error);
+      }
+    }
+  };
+
+  const pickImageFromGallery = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log("result", result);
+    if (!result.canceled) {
+      const imagePath = result.assets[0].uri;
+      const imageName = result.assets[0].fileName;
+      const newPath = `${FileSystem.documentDirectory}${imageName}`;
+
+      try {
+        await FileSystem.moveAsync({
+          from: imagePath,
+          to: newPath,
+        });
+        addMedia(imageName, newPath);
       } catch (error) {
         console.error("Error moving image:", error);
       }
@@ -248,7 +273,10 @@ export default function InputScreen() {
         <TouchableOpacity style={{ padding: 10 }} onPress={takePhotoWithCamera}>
           <FontAwesome size={20} name="camera" color={theme.primaryColor} />
         </TouchableOpacity>
-        <TouchableOpacity style={{ padding: 10 }}>
+        <TouchableOpacity
+          style={{ padding: 10 }}
+          onPress={pickImageFromGallery}
+        >
           <FontAwesome size={20} name="image" color={theme.primaryColor} />
         </TouchableOpacity>
       </KeyboardAvoidingView>
