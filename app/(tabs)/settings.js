@@ -1,13 +1,16 @@
 import { View, Text, FlatList, Pressable } from "react-native";
 import React, { useContext, useState } from "react";
 import { ThemeContext } from "../../helpers/ThemeContext";
-import Slider from "@react-native-community/slider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import BackgroundPicker from "../../components/settings/BackgroundPicker";
+import FontFamilyDropdown from "../../components/settings/FontFamilyDropdown";
+import FontSlider from "../../components/settings/FontSlider";
+import NotificationToggle from "../../components/settings/NotificationToggle";
+import ReminderList from "../../components/settings/ReminderList";
 
-const ExampleComponent = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+const Settings = () => {
+  const { theme } = useContext(ThemeContext);
   const [isDropDown, setIsDropDown] = useState(false);
-  const [toggleNotification, setToggleNotification] = useState(false);
 
   const themeColor = [
     { id: "lightViolet", backgroundColor: "#d8d6da" },
@@ -17,12 +20,12 @@ const ExampleComponent = () => {
     { id: "blueOrange", backgroundColor: "#2c114d" },
   ];
 
-  const fontDropdown = [
+  const fontList = [
     { id: "poppins", fontFamily: "Poppins" },
     { id: "inter", fontFamily: "Inter" },
     { id: "satoshi", fontFamily: "Satoshi" },
-    { id: "open sans", fontFamily: "Open Sans" },
-    { id: "Roboto", fontFamily: "Roboto" },
+    { id: "openSans", fontFamily: "Open Sans" },
+    { id: "roboto", fontFamily: "Roboto" },
   ];
 
   const reminders = [
@@ -30,44 +33,8 @@ const ExampleComponent = () => {
     { time: "6:25 PM", id: "secondReminder" },
   ];
 
-  const handleDropdown = () => {
-    setIsDropDown(!isDropDown);
-  };
-
-  const BgColor = ({ backgroundColor, themeKey }) => (
-    <Pressable
-      onPress={() => {
-        console.log(backgroundColor);
-        toggleTheme(themeKey);
-      }}
-    >
-      <View
-        style={{
-          height: 24,
-          width: 24,
-          borderRadius: 50,
-          borderWidth: 1,
-          borderColor: theme.primaryColor,
-          backgroundColor: backgroundColor,
-        }}
-      />
-    </Pressable>
-  );
-
-  const FontFamilyDropdown = ({ fontFamily }) => (
-    <View
-      style={{
-        width: "100%",
-        paddingVertical: 4,
-      }}
-    >
-      <Text style={{ color: theme.primaryColor }}>{fontFamily}</Text>
-    </View>
-  );
-
   return (
-    //main page
-    <View
+    <Pressable //main page
       style={{
         flex: 1,
         alignItems: "center",
@@ -76,8 +43,9 @@ const ExampleComponent = () => {
         gap: 40,
       }}
       onPress={() => {
-        console.log("Clicked");
-        setIsDropDown(false);
+        if (isDropDown == true) {
+          setIsDropDown(false);
+        }
       }}
     >
       <View //Container for appearance
@@ -87,6 +55,7 @@ const ExampleComponent = () => {
           borderRadius: 25,
           elevation: 8,
           padding: 20,
+          zIndex: 2,
         }}
       >
         <View>
@@ -105,96 +74,18 @@ const ExampleComponent = () => {
             Themes
           </Text>
           <View style={{ alignItems: "center" }}>
-            <FlatList
-              data={themeColor}
-              renderItem={({ item }) => (
-                <BgColor
-                  backgroundColor={item.backgroundColor}
-                  themeKey={item.id}
-                />
-              )}
-              keyExtractor={(item) => item.id}
-              horizontal
-              ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
-            />
+            <BackgroundPicker data={themeColor} />
           </View>
           <View style={{ gap: 10 }}>
             <Text style={{ color: theme.primaryColor, fontSize: 16 }}>
               Font Style
             </Text>
             <View style={{ alignItems: "center" }}>
-              <View style={{ width: 200 }}>
-                <Pressable
-                  onPress={handleDropdown}
-                  style={{
-                    width: "100%",
-                    height: 30,
-                    borderRadius: 25,
-                    backgroundColor: theme.secondaryColor,
-                    zIndex: 3,
-                    borderWidth: 1,
-                    borderColor: theme.primaryColor,
-                    paddingHorizontal: 10,
-                    justifyContent: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text style={{ color: theme.primaryColor, fontSize: 16 }}>
-                      Hello
-                    </Text>
-                    {isDropDown ? (
-                      <FontAwesome
-                        name="caret-up"
-                        color={theme.primaryColor}
-                        size={20}
-                      />
-                    ) : (
-                      <FontAwesome
-                        name="caret-down"
-                        color={theme.primaryColor}
-                        size={20}
-                      />
-                    )}
-                  </View>
-                </Pressable>
-                {isDropDown ? (
-                  <FlatList
-                    style={{
-                      backgroundColor: theme.secondaryColor,
-                      padding: 10,
-                      paddingTop: 15,
-                      width: "100%",
-                      alignSelf: "center",
-                      borderBottomLeftRadius: 12,
-                      borderBottomRightRadius: 12,
-                      position: "absolute",
-                      marginTop: 16,
-                      zIndex: 2,
-                      borderWidth: 1,
-                      borderColor: theme.primaryColor,
-                    }}
-                    data={fontDropdown}
-                    renderItem={({ item }) => (
-                      <FontFamilyDropdown fontFamily={item.fontFamily} />
-                    )}
-                    keyExtractor={(item) => item.id}
-                    ItemSeparatorComponent={() => (
-                      <View
-                        style={{
-                          width: "100%",
-                          backgroundColor: theme.primaryColor,
-                          height: 1,
-                        }}
-                      />
-                    )}
-                  />
-                ) : null}
-              </View>
+              <FontFamilyDropdown
+                fontList={fontList}
+                isDropDown={isDropDown}
+                setIsDropDown={setIsDropDown}
+              />
             </View>
           </View>
           <Text style={{ color: theme.primaryColor, fontSize: 16 }}>
@@ -203,65 +94,9 @@ const ExampleComponent = () => {
           <View
             style={{
               justifyContent: "center",
-              // maxWidth: 200,
             }}
           >
-            <View>
-              <Slider
-                minimumValue={0}
-                maximumValue={2}
-                minimumTrackTintColor={theme.primaryColor}
-                maximumTrackTintColor={theme.primaryColor}
-                thumbTintColor={theme.primaryColor}
-                step={1}
-                style={{ zIndex: 1, width: "98%" }}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  paddingHorizontal: 9,
-                  transform: "translateY(-13px)",
-                }}
-              >
-                <View style={{ alignItems: "center" }}>
-                  <View
-                    style={{
-                      backgroundColor: theme.primaryColor,
-                      width: 2,
-                      height: 8,
-                    }}
-                  />
-                  <Text style={{ color: theme.primaryColor, fontSize: 14 }}>
-                    Aa
-                  </Text>
-                </View>
-                <View style={{ alignItems: "center" }}>
-                  <View
-                    style={{
-                      backgroundColor: theme.primaryColor,
-                      width: 2,
-                      height: 8,
-                    }}
-                  />
-                  <Text style={{ color: theme.primaryColor, fontSize: 16 }}>
-                    Aa
-                  </Text>
-                </View>
-                <View style={{ alignItems: "center" }}>
-                  <View
-                    style={{
-                      backgroundColor: theme.primaryColor,
-                      width: 2,
-                      height: 8,
-                    }}
-                  />
-                  <Text style={{ color: theme.primaryColor, fontSize: 22 }}>
-                    Aa
-                  </Text>
-                </View>
-              </View>
-            </View>
+            <FontSlider />
           </View>
         </View>
       </View>
@@ -273,6 +108,7 @@ const ExampleComponent = () => {
           borderRadius: 25,
           elevation: 5,
           padding: 20,
+          zIndex: 1,
         }}
       >
         <View style={{ gap: 10 }}>
@@ -280,88 +116,7 @@ const ExampleComponent = () => {
             Notification
           </Text>
           <View style={{ alignItems: "center" }}>
-            <View
-              style={{
-                width: "80%",
-                borderColor: theme.primaryColor,
-                borderWidth: 1,
-                height: 42,
-                borderRadius: 25,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  position: "absolute",
-                  alignItems: "center",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <Pressable
-                  style={{
-                    width: "48%",
-                    height: "100%",
-                    backgroundColor: toggleNotification
-                      ? theme.primaryColor
-                      : theme.secondaryColor,
-                    borderRadius: 25,
-                    flex: 1,
-                    justifyContent: "center",
-                  }}
-                  onPress={() => {
-                    if (toggleNotification == false) {
-                      setToggleNotification(true);
-                    }
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: toggleNotification
-                        ? theme.secondaryColor
-                        : theme.primaryColor,
-                      textAlign: "center",
-                    }}
-                  >
-                    ON
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={{
-                    width: "48%",
-                    height: "100%",
-                    borderRadius: 25,
-                    backgroundColor: toggleNotification
-                      ? theme.secondaryColor
-                      : theme.primaryColor,
-
-                    flex: 1,
-                    justifyContent: "center",
-                  }}
-                  onPress={() => {
-                    if (toggleNotification == true) {
-                      setToggleNotification(false);
-                    }
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: toggleNotification
-                        ? theme.primaryColor
-                        : theme.secondaryColor,
-                      textAlign: "center",
-                    }}
-                  >
-                    OFF
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
+            <NotificationToggle />
           </View>
           <View style={{ gap: 10 }}>
             <View>
@@ -372,52 +127,12 @@ const ExampleComponent = () => {
                 Set upto 3 daily reminders
               </Text>
             </View>
-            <FlatList
-              data={reminders}
-              ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-              renderItem={({ item }) => (
-                <View style={{ alignItems: "center" }}>
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      height: 32,
-                      borderRadius: 20,
-                      width: "80%",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderColor: theme.primaryColor,
-                    }}
-                  >
-                    <Text style={{ color: theme.primaryColor }}>
-                      {item.time}
-                    </Text>
-                  </View>
-                </View>
-              )}
-              ListFooterComponent={() => (
-                <View style={{ alignItems: "center" }}>
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      height: 32,
-                      borderRadius: 20,
-                      width: "80%",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 10,
-                      borderColor: theme.primaryColor,
-                    }}
-                  >
-                    <Text style={{ color: theme.primaryColor }}>Add</Text>
-                  </View>
-                </View>
-              )}
-            />
+            <ReminderList data={reminders} />
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
-export default ExampleComponent;
+export default Settings;
