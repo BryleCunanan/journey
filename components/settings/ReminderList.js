@@ -80,14 +80,6 @@ const ReminderList = () => {
           </View>
         )}
         ListFooterComponent={ReminderFooter}
-        onViewableItemsChanged={({ viewableItems, changed }) => {
-          console.log("Visible items are", viewableItems);
-          console.log("Changed in this iteration", changed);
-        }}
-        viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
-        snapToAlignment="start"
-        snapToInterval={32}
-        decelerationRate="fast"
       />
       <Modal
         transparent={true}
