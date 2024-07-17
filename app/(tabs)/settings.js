@@ -1,7 +1,6 @@
 import { View, Text, FlatList, Pressable } from "react-native";
 import React, { useContext, useState } from "react";
 import { ThemeContext } from "../../helpers/ThemeContext";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import BackgroundPicker from "../../components/settings/BackgroundPicker";
 import FontFamilyDropdown from "../../components/settings/FontFamilyDropdown";
 import FontSlider from "../../components/settings/FontSlider";
@@ -9,7 +8,7 @@ import NotificationToggle from "../../components/settings/NotificationToggle";
 import ReminderList from "../../components/settings/ReminderList";
 
 const Settings = () => {
-  const { theme } = useContext(ThemeContext);
+  const { theme, font } = useContext(ThemeContext);
   const [isDropDown, setIsDropDown] = useState(false);
 
   const themeColor = [
@@ -59,13 +58,20 @@ const Settings = () => {
               fontWeight: "bold",
               color: theme.primaryColor,
               fontSize: 16 * 1.3,
+              fontFamily: font,
             }}
           >
             Appearance
           </Text>
         </View>
         <View style={{ gap: 20 }}>
-          <Text style={{ color: theme.primaryColor, fontSize: 16 }}>
+          <Text
+            style={{
+              color: theme.primaryColor,
+              fontSize: 16,
+              fontFamily: font,
+            }}
+          >
             Themes
           </Text>
           <View style={{ alignItems: "center" }}>

@@ -1,9 +1,8 @@
-// ThemeContext.js
-
 import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { loadAsync } from "expo-font";
+import AppLoading from "../components/AppLoading";
 
-// Define your themes
 export const lightVioletTheme = {
   primaryColor: "#d8d6da",
   secondaryColor: "#584e7e",
@@ -41,14 +40,18 @@ const themes = {
   yellowPink: yellowPinkTheme,
   blueOrange: blueOrangeTheme,
 };
-// Create context
+
+const fonts = {
+  Inter: require("../assets/fonts/Inter-VariableFont_slnt,wght.ttf"),
+};
+
 export const ThemeContext = createContext();
 
-// Create provider
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(lightVioletTheme);
+  const [font, setFont] = useState("Inter");
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  // Load theme from AsyncStorage on initial load
   useEffect(() => {
     async function loadTheme() {
       try {
@@ -56,6 +59,12 @@ export const ThemeProvider = ({ children }) => {
         if (storedTheme) {
           setTheme(JSON.parse(storedTheme));
         }
+        const storedFont = await AsyncStorage.getItem("config_font");
+        if (storedFont) {
+          setFont(storedFont);
+        }
+        await loadAsync(fonts);
+        setFontsLoaded(true);
       } catch (error) {
         console.error("Error loading theme from AsyncStorage:", error);
       }
@@ -74,8 +83,21 @@ export const ThemeProvider = ({ children }) => {
     }
   };
 
+  const changeFont = async (fontKey) => {
+    setFont(fontKey);
+    try {
+      await AsyncStorage.setItem("config_font", fontKey);
+    } catch (error) {
+      console.error("Error saving font to AsyncStorage:", error);
+    }
+  };
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, font, changeFont }}>
       {children}
     </ThemeContext.Provider>
   );
