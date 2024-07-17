@@ -2,36 +2,13 @@ import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loadAsync } from "expo-font";
 import AppLoading from "../components/AppLoading";
-
-export const lightVioletTheme = {
-  primaryColor: "#d8d6da",
-  secondaryColor: "#584e7e",
-  alignSelf: "flex-start",
-};
-
-export const darkBlueTheme = {
-  primaryColor: "#10222c",
-  secondaryColor: "#e8eaee", //card color
-  alignSelf: "flex-end",
-};
-
-export const whiteBlackTheme = {
-  primaryColor: "#f9fffe",
-  secondaryColor: "#2f354d",
-  alignSelf: "flex-end",
-};
-
-export const yellowPinkTheme = {
-  primaryColor: "#ffaf28",
-  secondaryColor: "#f62494", //card color
-  alignSelf: "flex-end",
-};
-
-export const blueOrangeTheme = {
-  primaryColor: "#2c114d",
-  secondaryColor: "#f9aa36", //card color
-  alignSelf: "flex-end",
-};
+import {
+  lightVioletTheme,
+  darkBlueTheme,
+  whiteBlackTheme,
+  yellowPinkTheme,
+  blueOrangeTheme,
+} from "../assets/themes";
 
 const themes = {
   lightViolet: lightVioletTheme,
@@ -42,14 +19,18 @@ const themes = {
 };
 
 const fonts = {
+  Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
   Inter: require("../assets/fonts/Inter-VariableFont_slnt,wght.ttf"),
+  Oswald: require("../assets/fonts/Oswald-VariableFont_wght.ttf"),
+  OpenSans: require("../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf"),
+  Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
 };
 
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(lightVioletTheme);
-  const [font, setFont] = useState("Inter");
+  const [font, setFont] = useState("Poppins");
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
