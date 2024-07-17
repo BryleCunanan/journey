@@ -21,7 +21,10 @@ const FontFamilyDropdown = ({ fontList, isDropDown, setIsDropDown }) => {
         borderRadius: 12,
       }}
       onPress={() => {
-        changeFont(fontFamily);
+        if (fontFamily !== font) {
+          setIsDropDown(false);
+          changeFont(fontFamily);
+        }
       }}
       hitSlop={{ top: 15, bottom: 15, left: 30, right: 30 }}
     >
