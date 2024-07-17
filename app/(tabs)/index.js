@@ -28,7 +28,7 @@ export default function Page() {
   const plusButtonScale1 = useState(new Animated.Value(1))[0];
   const plusButtonScale2 = useState(new Animated.Value(1))[0];
   const copyButtonScale = useState(new Animated.Value(1))[0];
-  const { theme } = useContext(ThemeContext);
+  const { theme, font } = useContext(ThemeContext);
 
   const debounce = (func, delay) => {
     let timeoutId;
@@ -201,13 +201,20 @@ export default function Page() {
         >
           <>
             <View>
-              <Text style={{ height: 100, color: theme.primaryColor }}>
+              <Text
+                style={{
+                  height: 100,
+                  color: theme.primaryColor,
+                  fontFamily: font,
+                }}
+              >
                 {title}
               </Text>
               <Text
                 style={{
                   textAlignVertical: "bottom",
                   color: theme.primaryColor,
+                  fontFamily: font,
                 }}
               >
                 {`${formattedDate}`}
@@ -254,9 +261,11 @@ export default function Page() {
             baseStyle={{
               textAlign: "center",
               fontSize: 20,
-              fontStyle: "italic",
+              // fontStyle: "italic",
               color: theme.secondaryColor,
+              fontFamily: font,
             }}
+            systemFonts={[font]}
           />
           <View
             style={{

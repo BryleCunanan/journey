@@ -6,14 +6,14 @@ import { BlurView } from "expo-blur";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const ReminderList = () => {
-  const { theme } = useContext(ThemeContext);
-  const [reminders, setReminders] = useState([]);
+  const { theme, font } = useContext(ThemeContext);
+  // const [reminders, setReminders] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  //   const reminders = [
-  //     { time: "5:25 PM", id: "firstReminder" },
-  //     { time: "6:25 PM", id: "secondReminder" },
-  //   ];
+    const reminders = [
+      { time: "5:25 PM", id: "firstReminder" },
+      { time: "6:25 PM", id: "secondReminder" },
+    ];
 
   const ReminderFooter = () => {
     return reminders.length < 3 ? (
@@ -75,7 +75,7 @@ const ReminderList = () => {
                 borderColor: theme.primaryColor,
               }}
             >
-              <Text style={{ color: theme.primaryColor }}>{item.time}</Text>
+              <Text style={{ color: theme.primaryColor, fontFamily: font, }}>{item.time}</Text>
             </View>
           </View>
         )}
@@ -131,7 +131,7 @@ const ReminderList = () => {
                   setIsModalVisible(false);
                 }}
               >
-                <Text>Back</Text>
+                <Text style={{fontFamily: font,}}>Back</Text>
               </Pressable>
             </Pressable>
           </Pressable>

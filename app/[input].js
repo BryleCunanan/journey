@@ -22,7 +22,7 @@ export default function InputScreen() {
   const [media, setMedia] = useState([]);
   const router = useRouter();
   const { id, calendar } = useLocalSearchParams();
-  const { theme } = useContext(ThemeContext);
+  const { theme, font } = useContext(ThemeContext);
 
   // [
   //   {
@@ -233,6 +233,7 @@ export default function InputScreen() {
               // height: 100,
               textAlignVertical: "top",
               color: theme.primaryColor,
+              fontFamily: font,
             }}
             multiline
             placeholder="What are you feeling today?"
@@ -254,7 +255,13 @@ export default function InputScreen() {
           }}
           onPress={handleSave}
         >
-          <Text style={{ color: theme.primaryColor, textAlign: "center" }}>
+          <Text
+            style={{
+              color: theme.primaryColor,
+              textAlign: "center",
+              fontFamily: font,
+            }}
+          >
             Save
           </Text>
         </Pressable>

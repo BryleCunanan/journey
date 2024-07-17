@@ -11,7 +11,7 @@ export default function Layout() {
 }
 
 const ThemedStack = () => {
-  const { theme } = useContext(ThemeContext);
+  const { theme, font } = useContext(ThemeContext);
   return (
     <Stack>
       <Stack.Screen
@@ -30,7 +30,7 @@ const ThemedStack = () => {
           },
           headerShadowVisible: false,
           headerTintColor: theme.secondaryColor,
-          headerTitleStyle: { fontWeight: "bold" },
+          headerTitleStyle: { fontFamily: font },
         }}
       />
     </Stack>

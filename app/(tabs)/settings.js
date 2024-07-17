@@ -55,7 +55,7 @@ const Settings = () => {
         <View>
           <Text
             style={{
-              fontWeight: "bold",
+              // fontWeight: "bold",
               color: theme.primaryColor,
               fontSize: 16 * 1.3,
               fontFamily: font,
@@ -78,7 +78,7 @@ const Settings = () => {
             <BackgroundPicker data={themeColor} />
           </View>
           <View style={{ gap: 10 }}>
-            <Text style={{ color: theme.primaryColor, fontSize: 16 }}>
+            <Text style={{ color: theme.primaryColor, fontSize: 16, fontFamily: font, }}>
               Font Style
             </Text>
             <View style={{ alignItems: "center" }}>
@@ -89,7 +89,7 @@ const Settings = () => {
               />
             </View>
           </View>
-          <Text style={{ color: theme.primaryColor, fontSize: 16 }}>
+          <Text style={{ color: theme.primaryColor, fontSize: 16, fontFamily: font, }}>
             Font Size
           </Text>
           <View
@@ -113,7 +113,7 @@ const Settings = () => {
         }}
       >
         <View style={{ gap: 10 }}>
-          <Text style={{ fontWeight: "bold", color: theme.primaryColor }}>
+          <Text style={{ fontSize: 16, color: theme.primaryColor, fontFamily: font, }}>
             Notification
           </Text>
           <View style={{ alignItems: "center" }}>
@@ -121,10 +121,10 @@ const Settings = () => {
           </View>
           <View style={{ gap: 10 }}>
             <View>
-              <Text style={{ fontWeight: "bold", color: theme.primaryColor }}>
+              <Text style={{ fontSize: 16, color: theme.primaryColor,fontFamily: font }}>
                 Daily Reminder
               </Text>
-              <Text style={{ fontSize: 12, color: theme.primaryColor }}>
+              <Text style={{ fontSize: 16 * 0.7, color: theme.primaryColor, fontFamily: font, }}>
                 Set upto 3 daily reminders
               </Text>
             </View>

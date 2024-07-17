@@ -3,7 +3,7 @@ import { Pressable, Text, View } from "react-native";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
 const NotificationToggle = () => {
-  const { theme } = useContext(ThemeContext);
+  const { theme, font } = useContext(ThemeContext);
   const [toggleNotification, setToggleNotification] = useState(false);
 
   return (
@@ -54,6 +54,7 @@ const NotificationToggle = () => {
                 ? theme.secondaryColor
                 : theme.primaryColor,
               textAlign: "center",
+              fontFamily: font,
             }}
           >
             ON
@@ -84,6 +85,7 @@ const NotificationToggle = () => {
                 ? theme.primaryColor
                 : theme.secondaryColor,
               textAlign: "center",
+              fontFamily: font,
             }}
           >
             OFF

@@ -21,7 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
 export default function Page() {
-  const { theme } = useContext(ThemeContext);
+  const { theme, font } = useContext(ThemeContext);
   const currentDate = new Date(Date.now());
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -189,13 +189,20 @@ export default function Page() {
         >
           <>
             <View>
-              <Text style={{ height: 100, color: theme.primaryColor }}>
+              <Text
+                style={{
+                  height: 100,
+                  color: theme.primaryColor,
+                  fontFamily: font,
+                }}
+              >
                 {title}
               </Text>
               <Text
                 style={{
                   textAlignVertical: "bottom",
                   color: theme.primaryColor,
+                  fontFamily: font,
                 }}
               >
                 {`${formattedDate}`}
@@ -245,7 +252,6 @@ export default function Page() {
         }}
         markedDates={{ ...markedDates, ...marked }}
         theme={{
-          // backgroundColor: theme.secondaryColor,
           calendarBackground: theme.secondaryColor,
           textSectionTitleColor: "#b6c1cd",
           textSectionTitleDisabledColor: "#d9e1e8",
@@ -260,12 +266,12 @@ export default function Page() {
           disabledArrowColor: "#d9e1e8",
           monthTextColor: theme.primaryColor,
           indicatorColor: theme.primaryColor,
-          textDayFontWeight: "300",
-          textMonthFontWeight: "bold",
-          textDayHeaderFontWeight: "300",
           textDayFontSize: 16,
           textMonthFontSize: 16,
           textDayHeaderFontSize: 16,
+          textDayFontFamily: font,
+          textMonthFontFamily: font,
+          textDayHeaderFontFamily: font,
         }}
       />
     </View>

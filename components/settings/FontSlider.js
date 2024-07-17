@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
 const FontSlider = () => {
-  const { theme } = useContext(ThemeContext);
+  const { theme, font} = useContext(ThemeContext);
   return (
     <View>
       <Slider
@@ -32,7 +32,7 @@ const FontSlider = () => {
               height: 8,
             }}
           />
-          <Text style={{ color: theme.primaryColor, fontSize: 14 }}>Aa</Text>
+          <Text style={{ color: theme.primaryColor, fontSize: 14, fontFamily: font, }}>Aa</Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <View
@@ -42,7 +42,7 @@ const FontSlider = () => {
               height: 8,
             }}
           />
-          <Text style={{ color: theme.primaryColor, fontSize: 16 }}>Aa</Text>
+          <Text style={{ color: theme.primaryColor, fontSize: 16, fontFamily: font, }}>Aa</Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <View
@@ -52,7 +52,7 @@ const FontSlider = () => {
               height: 8,
             }}
           />
-          <Text style={{ color: theme.primaryColor, fontSize: 22 }}>Aa</Text>
+          <Text style={{ color: theme.primaryColor, fontSize: 22,fontFamily: font, }}>Aa</Text>
         </View>
       </View>
     </View>
