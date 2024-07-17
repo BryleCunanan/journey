@@ -31,7 +31,8 @@
         {
           "photosPermission": "The app accesses your photos."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }

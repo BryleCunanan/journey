@@ -1,8 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
-import { setStatusBarBackgroundColor } from "expo-status-bar";
 import { useContext } from "react";
-import { Button } from "react-native";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
 export default function TabLayout() {

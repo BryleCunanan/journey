@@ -15,7 +15,6 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RenderHTML from "react-native-render-html";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
-
 import * as MediaLibrary from "expo-media-library";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
