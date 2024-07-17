@@ -22,8 +22,8 @@ const Settings = () => {
   const fontList = [
     { id: "poppins", fontFamily: "Poppins" },
     { id: "inter", fontFamily: "Inter" },
-    { id: "satoshi", fontFamily: "Satoshi" },
-    { id: "openSans", fontFamily: "Open Sans" },
+    { id: "oswald", fontFamily: "Oswald" },
+    { id: "openSans", fontFamily: "OpenSans" },
     { id: "roboto", fontFamily: "Roboto" },
   ];
 
