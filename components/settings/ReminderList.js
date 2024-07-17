@@ -3,6 +3,7 @@ import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ThemeContext } from "../../helpers/ThemeContext";
 import { BlurView } from "expo-blur";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const ReminderList = () => {
   const { theme } = useContext(ThemeContext);
@@ -13,8 +14,6 @@ const ReminderList = () => {
   //     { time: "5:25 PM", id: "firstReminder" },
   //     { time: "6:25 PM", id: "secondReminder" },
   //   ];
-
-  const hours = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 
   const ReminderFooter = () => {
     return reminders.length < 3 ? (
@@ -52,6 +51,10 @@ const ReminderList = () => {
       newReminders.push(newEntry);
       setReminders(newReminders);
     }
+  };
+
+  const handleChangeDate = (event, selectedDate) => {
+    console.log("event", selectedDate);
   };
 
   return (
@@ -119,17 +122,11 @@ const ReminderList = () => {
               }}
               onPress={() => {}}
             >
-              <FlatList
-                data={hours}
-                renderItem={({ item }) => {
-                  return (
-                    <View>
-                      <Text>{item}</Text>
-                    </View>
-                  );
-                }}
-                // style={{ height: 0 }}
-                windowSize={1}
+              <RNDateTimePicker
+                value={new Date()}
+                mode="time"
+                display="spinner"
+                onChange={() => {}}
               />
               <Pressable
                 style={{
