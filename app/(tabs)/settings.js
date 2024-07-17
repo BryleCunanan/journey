@@ -21,10 +21,10 @@ const Settings = () => {
 
   const fontList = [
     { id: "poppins", fontFamily: "Poppins" },
-    { id: "inter", fontFamily: "Inter" },
+    { id: "dmserif", fontFamily: "DMSerif" },
     { id: "oswald", fontFamily: "Oswald" },
-    { id: "openSans", fontFamily: "OpenSans" },
-    { id: "roboto", fontFamily: "Roboto" },
+    { id: "josefin", fontFamily: "Josefin" },
+    { id: "montserrat", fontFamily: "Montserrat" },
   ];
 
   return (
@@ -78,7 +78,13 @@ const Settings = () => {
             <BackgroundPicker data={themeColor} />
           </View>
           <View style={{ gap: 10 }}>
-            <Text style={{ color: theme.primaryColor, fontSize: 16, fontFamily: font, }}>
+            <Text
+              style={{
+                color: theme.primaryColor,
+                fontSize: 16,
+                fontFamily: font,
+              }}
+            >
               Font Style
             </Text>
             <View style={{ alignItems: "center" }}>
@@ -89,7 +95,13 @@ const Settings = () => {
               />
             </View>
           </View>
-          <Text style={{ color: theme.primaryColor, fontSize: 16, fontFamily: font, }}>
+          <Text
+            style={{
+              color: theme.primaryColor,
+              fontSize: 16,
+              fontFamily: font,
+            }}
+          >
             Font Size
           </Text>
           <View
@@ -113,7 +125,13 @@ const Settings = () => {
         }}
       >
         <View style={{ gap: 10 }}>
-          <Text style={{ fontSize: 16, color: theme.primaryColor, fontFamily: font, }}>
+          <Text
+            style={{
+              fontSize: 16,
+              color: theme.primaryColor,
+              fontFamily: font,
+            }}
+          >
             Notification
           </Text>
           <View style={{ alignItems: "center" }}>
@@ -121,10 +139,22 @@ const Settings = () => {
           </View>
           <View style={{ gap: 10 }}>
             <View>
-              <Text style={{ fontSize: 16, color: theme.primaryColor,fontFamily: font }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: theme.primaryColor,
+                  fontFamily: font,
+                }}
+              >
                 Daily Reminder
               </Text>
-              <Text style={{ fontSize: 16 * 0.7, color: theme.primaryColor, fontFamily: font, }}>
+              <Text
+                style={{
+                  fontSize: 16 * 0.7,
+                  color: theme.primaryColor,
+                  fontFamily: font,
+                }}
+              >
                 Set upto 3 daily reminders
               </Text>
             </View>

@@ -20,10 +20,10 @@ const themes = {
 
 const fonts = {
   Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
-  Inter: require("../assets/fonts/Inter-VariableFont_slnt,wght.ttf"),
+  DMSerif: require("../assets/fonts/DMSerifDisplay-Regular.ttf"),
   Oswald: require("../assets/fonts/Oswald-VariableFont_wght.ttf"),
-  OpenSans: require("../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf"),
-  Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
+  Josefin: require("../assets/fonts/JosefinSans-Regular.ttf"),
+  Montserrat: require("../assets/fonts/Montserrat-Medium.ttf"),
 };
 
 export const ThemeContext = createContext();

@@ -196,7 +196,7 @@ export default function Page() {
           style={{
             backgroundColor: theme.secondaryColor,
             padding: 10,
-            borderRadius: 25,
+            borderRadius: 13,
           }}
         >
           <>

@@ -4,17 +4,20 @@ import { Text, View } from "react-native";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
 const FontSlider = () => {
-  const { theme, font} = useContext(ThemeContext);
+  const { theme, font } = useContext(ThemeContext);
   return (
     <View>
       <Slider
-        minimumValue={0}
-        maximumValue={2}
+        minimumValue={14}
+        maximumValue={22}
         minimumTrackTintColor={theme.primaryColor}
         maximumTrackTintColor={theme.primaryColor}
         thumbTintColor={theme.primaryColor}
-        step={1}
+        step={4}
         style={{ zIndex: 1, width: "98%" }}
+        onValueChange={(value) => {
+          console.log("value", value);
+        }}
       />
       <View
         style={{
@@ -32,7 +35,15 @@ const FontSlider = () => {
               height: 8,
             }}
           />
-          <Text style={{ color: theme.primaryColor, fontSize: 14, fontFamily: font, }}>Aa</Text>
+          <Text
+            style={{
+              color: theme.primaryColor,
+              fontSize: 14,
+              fontFamily: font,
+            }}
+          >
+            Aa
+          </Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <View
@@ -42,7 +53,15 @@ const FontSlider = () => {
               height: 8,
             }}
           />
-          <Text style={{ color: theme.primaryColor, fontSize: 16, fontFamily: font, }}>Aa</Text>
+          <Text
+            style={{
+              color: theme.primaryColor,
+              fontSize: 18,
+              fontFamily: font,
+            }}
+          >
+            Aa
+          </Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <View
@@ -52,7 +71,15 @@ const FontSlider = () => {
               height: 8,
             }}
           />
-          <Text style={{ color: theme.primaryColor, fontSize: 22,fontFamily: font, }}>Aa</Text>
+          <Text
+            style={{
+              color: theme.primaryColor,
+              fontSize: 22,
+              fontFamily: font,
+            }}
+          >
+            Aa
+          </Text>
         </View>
       </View>
     </View>

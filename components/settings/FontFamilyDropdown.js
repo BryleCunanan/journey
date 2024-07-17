@@ -98,15 +98,62 @@ const FontFamilyDropdown = ({ fontList, isDropDown, setIsDropDown }) => {
             <Pressable
               style={{
                 width: "60%",
-                height: "30%",
+                height: "32%",
                 backgroundColor: theme.secondaryColor,
                 elevation: 5,
                 borderRadius: 14,
-                borderWidth: 2,
                 borderColor: theme.primaryColor,
               }}
               onPress={() => {}}
             >
+              <View
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingVertical: 8,
+                  paddingLeft: 4,
+                  borderTopLeftRadius: 12,
+                  borderTopRightRadius: 12,
+                  backgroundColor: theme.primaryColor,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: font,
+                    fontSize: 20,
+                    color: theme.secondaryColor,
+                  }}
+                >
+                  Select a Font
+                </Text>
+                <Pressable
+                  style={{
+                    borderRadius: 4,
+                    paddingHorizontal: 8,
+                  }}
+                  onPress={() => {
+                    setIsDropDown(false);
+                  }}
+                  hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+                >
+                  <FontAwesome
+                    name="close"
+                    color={theme.secondaryColor}
+                    size={20}
+                  />
+                </Pressable>
+              </View>
+              {/* <View
+                style={{
+                  height: 2,
+                  width: "80%",
+                  backgroundColor: theme.primaryColor,
+                  alignSelf: "center",
+                }}
+              /> */}
               <FlatList
                 style={{
                   padding: 10,
@@ -130,20 +177,6 @@ const FontFamilyDropdown = ({ fontList, isDropDown, setIsDropDown }) => {
                   />
                 )}
               />
-              <Pressable
-                style={{
-                  width: 32,
-                  backgroundColor: theme.primaryColor,
-                  height: 24,
-                  borderRadius: 4,
-                }}
-                onPress={() => {
-                  setIsDropDown(false);
-                }}
-                hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
-              >
-                <Text>Back</Text>
-              </Pressable>
             </Pressable>
           </Pressable>
         </BlurView>
