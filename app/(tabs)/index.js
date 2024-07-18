@@ -28,7 +28,7 @@ export default function Page() {
   const plusButtonScale1 = useState(new Animated.Value(1))[0];
   const plusButtonScale2 = useState(new Animated.Value(1))[0];
   const copyButtonScale = useState(new Animated.Value(1))[0];
-  const { theme, font } = useContext(ThemeContext);
+  const { theme, font, fontSize } = useContext(ThemeContext);
 
   const debounce = (func, delay) => {
     let timeoutId;
@@ -214,6 +214,7 @@ export default function Page() {
                   height: 100,
                   color: theme.primaryColor,
                   fontFamily: font,
+                  fontSize: fontSize,
                 }}
               >
                 {title}
@@ -223,6 +224,7 @@ export default function Page() {
                   textAlignVertical: "bottom",
                   color: theme.primaryColor,
                   fontFamily: font,
+                  fontSize: fontSize,
                 }}
               >
                 {`${formattedDate}`}
@@ -268,7 +270,7 @@ export default function Page() {
             source={quoteForToday}
             baseStyle={{
               textAlign: "center",
-              fontSize: 20,
+              fontSize: fontSize * 1.4,
               // fontStyle: "italic",
               color: theme.secondaryColor,
               fontFamily: font,

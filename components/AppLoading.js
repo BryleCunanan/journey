@@ -1,8 +1,10 @@
 import React from "react";
-import { Text } from "react-native";
+import { ActivityIndicator } from "react-native";
 
 const AppLoading = () => {
-  return <Text>AppLoading</Text>;
+  return (
+    <ActivityIndicator style={{ marginTop: 20 }} size="large" color="white" />
+  );
 };
 
 export default AppLoading;

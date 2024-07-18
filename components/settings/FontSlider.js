@@ -16,7 +16,6 @@ const FontSlider = () => {
         step={4}
         style={{ zIndex: 1, width: "98%", height: 32 }}
         onValueChange={(value) => {
-          console.log("value", value);
           changeFontSize(value);
         }}
         value={fontSize}

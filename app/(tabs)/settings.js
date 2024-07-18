@@ -1,5 +1,5 @@
-import { View, Text, FlatList, Pressable } from "react-native";
 import React, { useContext, useState } from "react";
+import { View, Text, FlatList, Pressable } from "react-native";
 import { ThemeContext } from "../../helpers/ThemeContext";
 import BackgroundPicker from "../../components/settings/BackgroundPicker";
 import FontFamilyDropdown from "../../components/settings/FontFamilyDropdown";
@@ -28,142 +28,147 @@ const Settings = () => {
     { id: "montserrat", fontFamily: "Montserrat" },
   ];
 
-  return (
-    <Pressable //main page
-      style={{
-        flex: 1,
-        alignItems: "center",
-        backgroundColor: theme.primaryColor,
-        padding: 30,
-        gap: 40,
-      }}
-      onPress={() => {
-        if (isDropDown == true) {
-          setIsDropDown(false);
-        }
-      }}
-    >
-      <View //Container for appearance
-        style={{
-          backgroundColor: theme.secondaryColor,
-          width: "100%",
-          borderRadius: 25,
-          elevation: 8,
-          padding: 20,
-          zIndex: 2,
-        }}
-      >
-        <View>
-          <Text
-            style={{
-              // fontWeight: "bold",
-              color: theme.primaryColor,
-              fontSize: fontSize * 1.3,
-              fontFamily: font,
-            }}
-          >
-            Appearance
-          </Text>
-        </View>
-        <View style={{ gap: 20 }}>
-          <Text
-            style={{
-              color: theme.primaryColor,
-              fontSize: 16,
-              fontFamily: font,
-            }}
-          >
-            Themes
-          </Text>
-          <View style={{ alignItems: "center" }}>
-            <BackgroundPicker data={themeColor} />
-          </View>
-          <View style={{ gap: 10 }}>
-            <Text
-              style={{
-                color: theme.primaryColor,
-                fontSize: 16,
-                fontFamily: font,
-              }}
-            >
-              Font Style
-            </Text>
-            <View style={{ alignItems: "center" }}>
-              <FontFamilyDropdown
-                fontList={fontList}
-                isDropDown={isDropDown}
-                setIsDropDown={setIsDropDown}
-              />
-            </View>
-          </View>
-          <Text
-            style={{
-              color: theme.primaryColor,
-              fontSize: 16,
-              fontFamily: font,
-            }}
-          >
-            Font Size
-          </Text>
+  const settingsSections = [{ type: "appearance" }, { type: "notifications" }];
+
+  const renderItem = ({ item }) => {
+    switch (item.type) {
+      case "appearance":
+        return (
           <View
             style={{
-              justifyContent: "center",
+              backgroundColor: theme.secondaryColor,
+              width: "100%",
+              borderRadius: 25,
+              elevation: 8,
+              padding: 20,
+              zIndex: 2,
+              marginBottom: 30,
             }}
           >
-            <FontSlider />
-          </View>
-        </View>
-      </View>
-
-      <View //Container for notification
-        style={{
-          backgroundColor: theme.secondaryColor,
-          width: "100%",
-          borderRadius: 25,
-          elevation: 5,
-          padding: 20,
-          zIndex: 1,
-        }}
-      >
-        <View style={{ gap: 10 }}>
-          <Text
-            style={{
-              fontSize: fontSize,
-              color: theme.primaryColor,
-              fontFamily: font,
-            }}
-          >
-            Notification
-          </Text>
-          <View style={{ alignItems: "center" }}>
-            <NotificationToggle reminders={reminders} />
-          </View>
-          <View style={{ gap: 10 }}>
             <View>
               <Text
                 style={{
-                  fontSize: 16,
                   color: theme.primaryColor,
+                  fontSize: fontSize * 1.3,
                   fontFamily: font,
                 }}
               >
-                Daily Reminder
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16 * 0.7,
-                  color: theme.primaryColor,
-                  fontFamily: font,
-                }}
-              >
-                Set upto 3 daily reminders
+                Appearance
               </Text>
             </View>
-            <ReminderList reminders={reminders} setReminders={setReminders} />
+            <View style={{ gap: 20 }}>
+              <Text
+                style={{
+                  color: theme.primaryColor,
+                  fontSize: fontSize,
+                  fontFamily: font,
+                }}
+              >
+                Themes
+              </Text>
+              <View style={{ alignItems: "center" }}>
+                <BackgroundPicker data={themeColor} />
+              </View>
+              <View style={{ gap: 10 }}>
+                <Text
+                  style={{
+                    color: theme.primaryColor,
+                    fontSize: fontSize,
+                    fontFamily: font,
+                  }}
+                >
+                  Font Style
+                </Text>
+                <View style={{ alignItems: "center" }}>
+                  <FontFamilyDropdown
+                    fontList={fontList}
+                    isDropDown={isDropDown}
+                    setIsDropDown={setIsDropDown}
+                  />
+                </View>
+              </View>
+              <Text
+                style={{
+                  color: theme.primaryColor,
+                  fontSize: fontSize,
+                  fontFamily: font,
+                }}
+              >
+                Font Size
+              </Text>
+              <View style={{ justifyContent: "center" }}>
+                <FontSlider />
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
-    </Pressable>
+        );
+      case "notifications":
+        return (
+          <View
+            style={{
+              backgroundColor: theme.secondaryColor,
+              width: "100%",
+              borderRadius: 25,
+              elevation: 5,
+              padding: 20,
+              zIndex: 1,
+            }}
+          >
+            <View style={{ gap: 10 }}>
+              <Text
+                style={{
+                  fontSize: fontSize,
+                  color: theme.primaryColor,
+                  fontFamily: font,
+                }}
+              >
+                Notification
+              </Text>
+              <View style={{ alignItems: "center" }}>
+                <NotificationToggle reminders={reminders} />
+              </View>
+              <View style={{ gap: 10 }}>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: fontSize,
+                      color: theme.primaryColor,
+                      fontFamily: font,
+                    }}
+                  >
+                    Daily Reminder
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: fontSize * 0.7,
+                      color: theme.primaryColor,
+                      fontFamily: font,
+                    }}
+                  >
+                    Set up to 3 daily reminders
+                  </Text>
+                </View>
+                <ReminderList
+                  reminders={reminders}
+                  setReminders={setReminders}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <FlatList
+      data={settingsSections}
+      keyExtractor={(item) => item.type}
+      renderItem={renderItem}
+      contentContainerStyle={{ padding: 30 }}
+      style={{ backgroundColor: theme.primaryColor }}
+    />
   );
 };
 

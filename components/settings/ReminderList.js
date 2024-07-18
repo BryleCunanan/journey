@@ -5,7 +5,7 @@ import { ThemeContext } from "../../helpers/ThemeContext";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 const ReminderList = ({ reminders, setReminders }) => {
-  const { theme, font } = useContext(ThemeContext);
+  const { theme, font, fontSize } = useContext(ThemeContext);
   const [timeDisplay, setTimeDisplay] = useState([]);
 
   useEffect(() => {
@@ -103,7 +103,13 @@ const ReminderList = ({ reminders, setReminders }) => {
             openTimePicker(now, index, "edit");
           }}
         >
-          <Text style={{ color: theme.primaryColor, fontFamily: font }}>
+          <Text
+            style={{
+              color: theme.primaryColor,
+              fontFamily: font,
+              fontSize: fontSize,
+            }}
+          >
             {time}
           </Text>
           <Pressable

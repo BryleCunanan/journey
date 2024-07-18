@@ -5,7 +5,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { BlurView } from "expo-blur";
 
 const FontFamilyDropdown = ({ fontList, isDropDown, setIsDropDown }) => {
-  const { theme, font, changeFont } = useContext(ThemeContext);
+  const { theme, font, changeFont, fontSize } = useContext(ThemeContext);
 
   const handleDropdown = () => {
     setIsDropDown(!isDropDown);
@@ -64,7 +64,7 @@ const FontFamilyDropdown = ({ fontList, isDropDown, setIsDropDown }) => {
           <Text
             style={{
               color: theme.primaryColor,
-              fontSize: 16,
+              fontSize: fontSize,
               fontFamily: font,
             }}
           >
@@ -146,14 +146,6 @@ const FontFamilyDropdown = ({ fontList, isDropDown, setIsDropDown }) => {
                   />
                 </Pressable>
               </View>
-              {/* <View
-                style={{
-                  height: 2,
-                  width: "80%",
-                  backgroundColor: theme.primaryColor,
-                  alignSelf: "center",
-                }}
-              /> */}
               <FlatList
                 style={{
                   padding: 10,

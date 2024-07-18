@@ -21,7 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
 export default function Page() {
-  const { theme, font } = useContext(ThemeContext);
+  const { theme, font, fontSize } = useContext(ThemeContext);
   const currentDate = new Date(Date.now());
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -194,6 +194,7 @@ export default function Page() {
                   height: 100,
                   color: theme.primaryColor,
                   fontFamily: font,
+                  fontSize: fontSize,
                 }}
               >
                 {title}
@@ -203,6 +204,7 @@ export default function Page() {
                   textAlignVertical: "bottom",
                   color: theme.primaryColor,
                   fontFamily: font,
+                  fontSize: fontSize,
                 }}
               >
                 {`${formattedDate}`}
@@ -266,9 +268,9 @@ export default function Page() {
           disabledArrowColor: "#d9e1e8",
           monthTextColor: theme.primaryColor,
           indicatorColor: theme.primaryColor,
-          textDayFontSize: 16,
-          textMonthFontSize: 16,
-          textDayHeaderFontSize: 16,
+          textDayFontSize: fontSize,
+          textMonthFontSize: fontSize,
+          textDayHeaderFontSize: fontSize,
           textDayFontFamily: font,
           textMonthFontFamily: font,
           textDayHeaderFontFamily: font,

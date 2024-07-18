@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
 export default function TabLayout() {
-  const { theme, font } = useContext(ThemeContext);
+  const { theme, font, fontSize } = useContext(ThemeContext);
   return (
     <Tabs
       screenOptions={{
@@ -18,7 +18,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: "rgba(0,0,0,0.4)",
         headerStyle: { backgroundColor: theme.primaryColor, elevation: 0 },
         headerTintColor: theme.secondaryColor,
-        headerTitleStyle: { fontFamily: font },
+        headerTitleStyle: { fontFamily: font, fontSize: fontSize * 1.4 },
       }}
     >
       <Tabs.Screen

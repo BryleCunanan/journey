@@ -22,7 +22,7 @@ export default function InputScreen() {
   const [media, setMedia] = useState([]);
   const router = useRouter();
   const { id, calendar } = useLocalSearchParams();
-  const { theme, font } = useContext(ThemeContext);
+  const { theme, font, fontSize } = useContext(ThemeContext);
 
   // [
   //   {
@@ -234,6 +234,7 @@ export default function InputScreen() {
               textAlignVertical: "top",
               color: theme.primaryColor,
               fontFamily: font,
+              fontSize: fontSize,
             }}
             multiline
             placeholder="What are you feeling today?"
@@ -260,6 +261,7 @@ export default function InputScreen() {
               color: theme.primaryColor,
               textAlign: "center",
               fontFamily: font,
+              fontSize: fontSize,
             }}
           >
             Save

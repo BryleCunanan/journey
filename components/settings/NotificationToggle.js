@@ -3,35 +3,9 @@ import { Pressable, Text, View, Alert, Platform } from "react-native";
 import { ThemeContext } from "../../helpers/ThemeContext";
 import * as Notifications from "expo-notifications";
 
-const calculateTimeDifference = (targetTime) => {
-  const now = new Date();
-  const target = new Date(now);
-  target.setHours(targetTime.hours, targetTime.minutes, 0, 0);
-
-  if (target <= now) {
-    target.setDate(target.getDate() + 1);
-  }
-
-  return target - now;
-};
-
 const NotificationToggle = ({ reminders }) => {
-  const { theme, font } = useContext(ThemeContext);
+  const { theme, font, fontSize } = useContext(ThemeContext);
   const [toggleNotification, setToggleNotification] = useState(false);
-  // const targetTime = { hours: 0, minutes: 50 };
-
-  // useEffect(() => {
-  //   if (toggleNotification) {
-  //     const timeDifference = calculateTimeDifference(targetTime);
-
-  //     const timer = setTimeout(() => {
-  //       Alert.alert("Notification", "Do your journal!");
-  //       setToggleNotification(false);
-  //     }, timeDifference);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [toggleNotification]);
 
   useEffect(() => {
     const scheduleNotifications = async () => {
@@ -41,12 +15,6 @@ const NotificationToggle = ({ reminders }) => {
           console.log("Permission to send notifications denied");
           return;
         }
-
-        const triggerTimes = [
-          { hour: 8, minute: 0 },
-          { hour: 10, minute: 10 },
-          { hour: 18, minute: 0 },
-        ];
 
         await Notifications.cancelAllScheduledNotificationsAsync();
 
