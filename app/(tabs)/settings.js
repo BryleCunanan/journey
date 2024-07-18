@@ -10,6 +10,7 @@ import ReminderList from "../../components/settings/ReminderList";
 const Settings = () => {
   const { theme, font } = useContext(ThemeContext);
   const [isDropDown, setIsDropDown] = useState(false);
+  const [reminders, setReminders] = useState([]);
 
   const themeColor = [
     { id: "lightViolet", backgroundColor: "#d8d6da" },
@@ -135,7 +136,7 @@ const Settings = () => {
             Notification
           </Text>
           <View style={{ alignItems: "center" }}>
-            <NotificationToggle />
+            <NotificationToggle reminders={reminders} />
           </View>
           <View style={{ gap: 10 }}>
             <View>
@@ -158,7 +159,7 @@ const Settings = () => {
                 Set upto 3 daily reminders
               </Text>
             </View>
-            <ReminderList />
+            <ReminderList reminders={reminders} setReminders={setReminders} />
           </View>
         </View>
       </View>

@@ -55,6 +55,14 @@ export default function Page() {
     if (status !== "granted") {
       alert("Sorry, we need media library permissions to make this work!");
     }
+
+    Notifications.requestPermissionsAsync()
+      .then((status) => {
+        console.log("Permission status:", status);
+      })
+      .catch((error) => {
+        console.log("Error requesting permissions:", error);
+      });
   };
 
   useEffect(() => {
