@@ -271,7 +271,6 @@ export default function Page() {
             baseStyle={{
               textAlign: "center",
               fontSize: fontSize * 1.4,
-              // fontStyle: "italic",
               color: theme.secondaryColor,
               fontFamily: font,
             }}

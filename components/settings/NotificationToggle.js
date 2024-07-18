@@ -1,11 +1,44 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Pressable, Text, View, Alert, Platform } from "react-native";
+import { Pressable, Text, View, Platform } from "react-native";
 import { ThemeContext } from "../../helpers/ThemeContext";
 import * as Notifications from "expo-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const NotificationToggle = ({ reminders }) => {
   const { theme, font, fontSize } = useContext(ThemeContext);
   const [toggleNotification, setToggleNotification] = useState(false);
+
+  useEffect(() => {
+    const loadNotificationToggle = async () => {
+      try {
+        const storedToggle = await AsyncStorage.getItem(
+          "config_notificationToggle"
+        );
+        if (storedToggle !== null) {
+          setToggleNotification(JSON.parse(storedToggle));
+        }
+      } catch (error) {
+        console.error("Failed to load notification toggle state:", error);
+      }
+    };
+
+    loadNotificationToggle();
+  }, []);
+
+  useEffect(() => {
+    const saveNotificationToggle = async () => {
+      try {
+        await AsyncStorage.setItem(
+          "config_notificationToggle",
+          JSON.stringify(toggleNotification)
+        );
+      } catch (error) {
+        console.error("Failed to save notification toggle state:", error);
+      }
+    };
+
+    saveNotificationToggle();
+  }, [toggleNotification]);
 
   useEffect(() => {
     const scheduleNotifications = async () => {
