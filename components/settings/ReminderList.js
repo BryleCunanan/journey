@@ -1,16 +1,91 @@
-import React, { useContext, useState } from "react";
-import { FlatList, Modal, Pressable, Text, View } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { FlatList, Pressable, Text, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ThemeContext } from "../../helpers/ThemeContext";
-import { BlurView } from "expo-blur";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 const ReminderList = ({ reminders, setReminders }) => {
   const { theme, font } = useContext(ThemeContext);
-  const [showPicker, setShowPicker] = useState(false);
   const [timeDisplay, setTimeDisplay] = useState([]);
 
+  useEffect(() => {
+    const updatedTime = reminders.map((item) => {
+      const date = new Date();
+      const { hour, minute } = item;
+
+      date.setHours(hour, minute, 0, 0);
+
+      const timeString = date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      return { time: timeString };
+    });
+    console.log("updatedTime", updatedTime);
+
+    setTimeDisplay(updatedTime);
+  }, [reminders]);
+
+  const openTimePicker = (date, index, type) => {
+    DateTimePickerAndroid.open({
+      value: date,
+      mode: "time",
+      display: "spinner",
+      onChange: (event, selectedDate) =>
+        handleChangeDate(event, selectedDate, index, type),
+    });
+  };
+
+  const handleReminder = (selectedDate, index, mode) => {
+    if (reminders.length < 3) {
+      console.log("length", reminders.length);
+      console.log("selectedDate", selectedDate);
+      console.log("mode", mode);
+
+      const date = new Date(selectedDate);
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+
+      const newEntry = { hour, minute };
+      console.log("newEntry", newEntry);
+
+      const updatedReminders = [...reminders];
+      if (mode == "add") {
+        updatedReminders.push(newEntry);
+      } else if (mode == "edit") {
+        updatedReminders[index] = newEntry;
+      }
+
+      setReminders(updatedReminders);
+    }
+  };
+
+  const handleChangeDate = (event, selectedDate, index, mode) => {
+    console.log("event", event);
+    if (event.type == "set") {
+      handleReminder(selectedDate, index, mode);
+    }
+  };
+
+  const handleDelete = (index) => {
+    const updatedReminders = [...reminders];
+    updatedReminders.splice(index, 1);
+
+    console.log("updatedReminders", updatedReminders);
+
+    setReminders(updatedReminders);
+  };
+
   const ReminderItem = ({ time, index }) => {
+    if (index >= reminders.length) return null;
+
+    const now = new Date();
+    const { hour, minute } = reminders[index];
+
+    now.setHours(hour, minute, 0, 0);
+
     return (
       <View style={{ alignItems: "center" }}>
         <Pressable
@@ -24,13 +99,33 @@ const ReminderList = ({ reminders, setReminders }) => {
             borderColor: theme.primaryColor,
             flexDirection: "row",
           }}
-          onPress={() => {}}
+          onPress={() => {
+            openTimePicker(now, index, "edit");
+          }}
         >
           <Text style={{ color: theme.primaryColor, fontFamily: font }}>
             {time}
           </Text>
-          <Pressable style={{ justifyContent: "flex-end" }}>
-            <FontAwesome name="trash" size={24} color={theme.primaryColor} />
+          <Pressable
+            style={({ pressed }) => [
+              {
+                position: "absolute",
+                right: 8,
+                backgroundColor: pressed ? theme.primaryColor : "transparent",
+                opacity: pressed ? 0.3 : 1,
+                padding: 4,
+                width: 24,
+                borderRadius: 25,
+                alignItems: "center",
+                justifyContent: "center",
+              },
+            ]}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+            onPress={() => {
+              handleDelete(index);
+            }}
+          >
+            <FontAwesome name="remove" size={16} color={theme.primaryColor} />
           </Pressable>
         </Pressable>
       </View>
@@ -48,9 +143,9 @@ const ReminderList = ({ reminders, setReminders }) => {
             marginTop: 8,
             borderColor: theme.primaryColor,
           }}
-          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+          hitSlop={{ top: 10, bottom: 30, left: 30, right: 30 }}
           onPress={() => {
-            setShowPicker(true);
+            openTimePicker(new Date(), null, "add");
           }}
         >
           <FontAwesome
@@ -65,48 +160,6 @@ const ReminderList = ({ reminders, setReminders }) => {
     );
   };
 
-  const handleAddReminder = (selectedDate) => {
-    if (reminders.length < 3) {
-      console.log("length", reminders.length);
-      console.log("selectedDate", selectedDate);
-
-      const date = new Date(selectedDate);
-      const hour = date.getHours();
-      const minute = date.getMinutes();
-
-      const newEntry = { hour, minute };
-      console.log("newEntry", newEntry);
-      const newReminders = [...reminders];
-      newReminders.push(newEntry);
-      setReminders(newReminders);
-
-      const timeString = date.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      });
-
-      console.log(timeString);
-      const newDisplay = [...timeDisplay];
-      newDisplay.push({ time: timeString });
-      setTimeDisplay(newDisplay);
-      // { time: "5:25 PM", id: "firstReminder" }
-    }
-  };
-
-  const handleChangeDate = (event, selectedDate) => {
-    setShowPicker(false);
-    console.log("event", event);
-    if (event.type == "set") {
-      handleAddReminder(selectedDate);
-    }
-  };
-
-  //dalawa yung time picker, isa para sa create, isa para sa edit, make it so na isa lang yung component for both.
-  //and then make the reminderItem a pressable where when pressed, will let you edit the time, using the value of that said time
-  //I gave you an index property to work with.
-  //implement delete for reminders list. kahit splice enough na, pwedem mo rin gamitin yung index na property
-  //LAST NA YON, AFTER THAT, TRY TO BUILD AS APK AND TEST
   return (
     <>
       <FlatList
@@ -117,14 +170,6 @@ const ReminderList = ({ reminders, setReminders }) => {
         )}
         ListFooterComponent={ReminderFooter}
       />
-      {showPicker && (
-        <RNDateTimePicker
-          value={new Date()}
-          mode="time"
-          display="spinner"
-          onChange={handleChangeDate}
-        />
-      )}
     </>
   );
 };

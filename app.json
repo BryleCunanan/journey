@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Journey",
-    "slug": "Journey",
+    "name": "Tala",
+    "slug": "Tala",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "journey-scheme",
+    "scheme": "tala-scheme",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

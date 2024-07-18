@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 import { ThemeContext } from "../../helpers/ThemeContext";
 
 const FontSlider = () => {
-  const { theme, font } = useContext(ThemeContext);
+  const { theme, font, fontSize, changeFontSize } = useContext(ThemeContext);
   return (
     <View>
       <Slider
@@ -14,10 +14,12 @@ const FontSlider = () => {
         maximumTrackTintColor={theme.primaryColor}
         thumbTintColor={theme.primaryColor}
         step={4}
-        style={{ zIndex: 1, width: "98%" }}
+        style={{ zIndex: 1, width: "98%", height: 32 }}
         onValueChange={(value) => {
           console.log("value", value);
+          changeFontSize(value);
         }}
+        value={fontSize}
       />
       <View
         style={{
@@ -28,13 +30,6 @@ const FontSlider = () => {
         }}
       >
         <View style={{ alignItems: "center" }}>
-          <View
-            style={{
-              backgroundColor: theme.primaryColor,
-              width: 2,
-              height: 8,
-            }}
-          />
           <Text
             style={{
               color: theme.primaryColor,
@@ -46,13 +41,6 @@ const FontSlider = () => {
           </Text>
         </View>
         <View style={{ alignItems: "center" }}>
-          <View
-            style={{
-              backgroundColor: theme.primaryColor,
-              width: 2,
-              height: 8,
-            }}
-          />
           <Text
             style={{
               color: theme.primaryColor,
@@ -64,13 +52,6 @@ const FontSlider = () => {
           </Text>
         </View>
         <View style={{ alignItems: "center" }}>
-          <View
-            style={{
-              backgroundColor: theme.primaryColor,
-              width: 2,
-              height: 8,
-            }}
-          />
           <Text
             style={{
               color: theme.primaryColor,

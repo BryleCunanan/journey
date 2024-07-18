@@ -25,7 +25,7 @@ export default function TabLayout() {
         name="index"
         options={{
           tabBarLabel: "Entries",
-          headerTitle: "Diary ng Panget",
+          headerTitle: "Tala",
           headerTitleAlign: "center",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="book" color={color} />

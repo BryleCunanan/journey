@@ -8,7 +8,7 @@ import NotificationToggle from "../../components/settings/NotificationToggle";
 import ReminderList from "../../components/settings/ReminderList";
 
 const Settings = () => {
-  const { theme, font } = useContext(ThemeContext);
+  const { theme, font, fontSize } = useContext(ThemeContext);
   const [isDropDown, setIsDropDown] = useState(false);
   const [reminders, setReminders] = useState([]);
 
@@ -58,7 +58,7 @@ const Settings = () => {
             style={{
               // fontWeight: "bold",
               color: theme.primaryColor,
-              fontSize: 16 * 1.3,
+              fontSize: fontSize * 1.3,
               fontFamily: font,
             }}
           >
@@ -128,7 +128,7 @@ const Settings = () => {
         <View style={{ gap: 10 }}>
           <Text
             style={{
-              fontSize: 16,
+              fontSize: fontSize,
               color: theme.primaryColor,
               fontFamily: font,
             }}

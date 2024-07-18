@@ -48,26 +48,26 @@ export default function Page() {
     }, 1000),
     []
   );
-  const getPermissions = async () => {
+  const getMediaPermissions = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
 
     console.log("Status: ", status);
     if (status !== "granted") {
       alert("Sorry, we need media library permissions to make this work!");
     }
+  };
 
-    Notifications.requestPermissionsAsync()
-      .then((status) => {
-        console.log("Permission status:", status);
-      })
-      .catch((error) => {
-        console.log("Error requesting permissions:", error);
-      });
+  const getNotifPermissions = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== "granted") {
+      alert("Sorry, we need notifications permissions to make this work!");
+    }
   };
 
   useEffect(() => {
     // clearAll();
-    getPermissions();
+    getMediaPermissions();
+    // getNotifPermissions();
     debouncedFetchQuoteOfTheDay();
     return debouncedFetchQuoteOfTheDay.cancel;
   }, []);
