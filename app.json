@@ -23,7 +23,10 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.talagroup.tala"
+      "package": "com.talagroup.tala",
+      "notification": {
+        "icon": "./assets/notification-icon.png"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,14 +39,8 @@
           "photosPermission": "The app accesses your photos."
         }
       ],
-      "expo-font",
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/notification-icon.png",
-          "defaultChannel": "default"
-        }
-      ]
+      "expo-font"
+      
     ],
     "extra": {
       "router": {

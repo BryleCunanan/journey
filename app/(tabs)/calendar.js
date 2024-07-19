@@ -185,7 +185,7 @@ export default function Page() {
           onPress={() =>
             router.push({
               pathname: "[input]",
-              params: { id: epochId, calendar: true },
+              params: { id, calendar: true },
             })
           }
           onShowUnderlay={separators.highlight}
