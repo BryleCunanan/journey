@@ -3,10 +3,41 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ThemeContext } from "../../helpers/ThemeContext";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ReminderList = ({ reminders, setReminders }) => {
   const { theme, font, fontSize } = useContext(ThemeContext);
   const [timeDisplay, setTimeDisplay] = useState([]);
+
+  useEffect(() => {
+    const loadReminders = async () => {
+      try {
+        const storedReminders = await AsyncStorage.getItem("config_reminders");
+        if (storedReminders !== null) {
+          setReminders(JSON.parse(storedReminders));
+        }
+      } catch (error) {
+        console.error("Failed to load reminders:", error);
+      }
+    };
+
+    loadReminders();
+  }, []);
+
+  useEffect(() => {
+    const saveReminders = async () => {
+      try {
+        await AsyncStorage.setItem(
+          "config_reminders",
+          JSON.stringify(reminders)
+        );
+      } catch (error) {
+        console.error("Failed to save reminders:", error);
+      }
+    };
+
+    saveReminders();
+  }, [reminders]);
 
   useEffect(() => {
     const updatedTime = reminders.map((item) => {
@@ -70,12 +101,14 @@ const ReminderList = ({ reminders, setReminders }) => {
   };
 
   const handleDelete = (index) => {
-    const updatedReminders = [...reminders];
-    updatedReminders.splice(index, 1);
+    if (index !== -1) {
+      const updatedReminders = [...reminders];
+      updatedReminders.splice(index, 1);
 
-    console.log("updatedReminders", updatedReminders);
+      console.log("updatedReminders", updatedReminders);
 
-    setReminders(updatedReminders);
+      setReminders(updatedReminders);
+    }
   };
 
   const ReminderItem = ({ time, index }) => {

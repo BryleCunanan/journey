@@ -170,9 +170,14 @@ export default function InputScreen() {
   const ImageList = ({ id, path }) => {
     return (
       <>
-        <View>
+        <View style={{ marginHorizontal: 4 }}>
           <Image
-            style={{ width: 256, height: 192, resizeMode: "stretch" }}
+            style={{
+              width: 256,
+              height: 192,
+              resizeMode: "stretch",
+              borderRadius: 12,
+            }}
             source={{ uri: path }}
           />
         </View>
@@ -242,7 +247,8 @@ export default function InputScreen() {
             value={text}
             onChangeText={setText}
             autoFocus
-            rows={7}
+            rows={5}
+            cursorColor={theme.primaryColor}
           />
         </View>
         <Pressable
