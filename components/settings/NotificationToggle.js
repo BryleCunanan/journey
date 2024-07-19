@@ -62,8 +62,8 @@ const NotificationToggle = ({ reminders }) => {
             const notificationId =
               await Notifications.scheduleNotificationAsync({
                 content: {
-                  title: "Daily Reminder",
-                  body: "Don't forget to check your tasks for today!",
+                  title: "Tala is missing you!",
+                  body: "How are you feeling? Tala is waiting to hear it all!",
                 },
                 trigger,
               });

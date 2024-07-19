@@ -19,7 +19,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.talagroup.tala"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,13 +36,22 @@
           "photosPermission": "The app accesses your photos."
         }
       ],
+      "expo-font",
       [
-        "expo-local-authentication",
+        "expo-notifications",
         {
-          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
+          "icon": "./assets/notification-icon.png",
+          "defaultChannel": "default"
         }
-      ],
-      "expo-font"
-    ]
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "fc92573a-3314-4be9-8b9b-875b12cff857"
+      }
+    }
   }
 }

@@ -1,0 +1,29 @@
+{
+  "cli": {
+    "version": ">= 10.2.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+      "EXPO_PUBLIC_QUOTE_URL": "https://zenquotes.io/api/today"
+      }
+    },
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+      "EXPO_PUBLIC_QUOTE_URL": "https://zenquotes.io/api/today"
+      }
+    },
+    "production": {"env": {
+      "EXPO_PUBLIC_QUOTE_URL": "https://zenquotes.io/api/today"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

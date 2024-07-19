@@ -22,7 +22,6 @@ export default function Page() {
   const [quoteForToday, setQuoteForToday] = useState(null);
   const [entryData, setEntryData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const api_url = "https://zenquotes.io/api/today";
   const { width } = useWindowDimensions();
   const router = useRouter();
   const plusButtonScale1 = useState(new Animated.Value(1))[0];
@@ -44,7 +43,7 @@ export default function Page() {
 
   const debouncedFetchQuoteOfTheDay = useCallback(
     debounce(() => {
-      fetchQuoteOfTheDay(api_url);
+      fetchQuoteOfTheDay(process.env.EXPO_PUBLIC_QUOTE_URL);
     }, 1000),
     []
   );
@@ -176,7 +175,12 @@ export default function Page() {
     console.log("Done.");
   };
 
-  const Item = ({ id, title, scale, separators }) => {
+  const Item = ({
+    id = 0,
+    title = "Default Title",
+    scale = new Animated.Value(1),
+    separators = {},
+  }) => {
     const date = new Date(id * 1000);
 
     const formattedDate = date.toLocaleDateString(undefined, {
@@ -267,7 +271,9 @@ export default function Page() {
         <>
           <RenderHTML
             contentWidth={width}
-            source={quoteForToday}
+            source={
+              quoteForToday || { html: "<p>No quote available</p>", copy: "" }
+            }
             baseStyle={{
               textAlign: "center",
               fontSize: fontSize * 1.4,

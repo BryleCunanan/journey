@@ -92,6 +92,15 @@ export default function Page() {
     }
   };
 
+  const removeValue = async (key) => {
+    try {
+      await AsyncStorage.removeItem(key);
+      importData();
+    } catch (e) {
+      console.error("Error removing data:", e);
+    }
+  };
+
   const marked = useMemo(
     () => ({ [selected]: { selected: true } }),
     [selected]
